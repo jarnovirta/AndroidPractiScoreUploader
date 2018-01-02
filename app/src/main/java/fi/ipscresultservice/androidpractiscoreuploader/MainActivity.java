@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
 		Log.d("onCreate", "*** SENDING TEST jSON ***");
 		HttpService.sendMatchScore(matchScore);
 		Log.d("onCreate", "*** STARTING TEST SERVICE ***");
-		Intent i = new Intent(this, TestService.class);
-		startService(i);
+		Intent intent = new Intent(this, TestService.class);
+		startService(intent);
 
 	}
 }
