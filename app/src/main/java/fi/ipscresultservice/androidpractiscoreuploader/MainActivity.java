@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 		String matchScore = PractiScoreFileParser.readMatchScoreData(FileService.getPractiScoreExportFile());
 
 		Log.d("onCreate", "*** SENDING TEST jSON ***");
-		HttpService.sendMatchScore(matchScore);
+		// HttpService.sendMatchScore(matchScore);
 		Log.d("onCreate", "*** STARTING TEST SERVICE ***");
 		Intent intent = new Intent(this, TestService.class);
 		startService(intent);
