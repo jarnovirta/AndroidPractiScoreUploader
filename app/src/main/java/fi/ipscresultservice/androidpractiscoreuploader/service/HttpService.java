@@ -20,10 +20,11 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
+// TODO: HttpClient deprecated, does not work in Samsung.
 public class HttpService {
 
 	private static String serverUrl = "http://192.168.43.105:8080/IPSCResultServer/api/matches";
-
+	// private static String serverUrl = "";
 
 	public static void sendMatchScore(String json) {
 		// ObjectMapper objectMapper = new ObjectMapper();
@@ -32,10 +33,11 @@ public class HttpService {
 
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
-
+			Log.d("HTTPService", "Starting httpclient");
 			httpClient = HttpClientBuilder.create().build();
 			// String JSON = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(matchScore);
 			HttpPost request = new HttpPost(serverUrl);
+			Log.d("HTTPService", "Getting params");
 			StringEntity params = new StringEntity(json);
 			request.addHeader("content-type", "application/json");
 			request.setEntity(params);
@@ -52,5 +54,7 @@ public class HttpService {
 
 		}
 	}
-
+	public static void setServerAddress(String address) {
+		serverUrl = address;
+	}
 }

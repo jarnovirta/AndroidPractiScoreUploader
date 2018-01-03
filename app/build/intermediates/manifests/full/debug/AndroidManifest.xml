@@ -29,6 +29,8 @@
             </intent-filter>
         </activity>
 
+        <service android:name="fi.ipscresultservice.androidpractiscoreuploader.service.TestService" />
+
         <meta-data
             android:name="android.support.VERSION"
             android:value="26.1.0" />

@@ -16,13 +16,16 @@ public class FileService {
 	private static MatchScore matchScore = null;
 	private static Long lastModified = null;
 
-	public static MatchScore watchPractiScoreExportFileChange() {
+	public static MatchScore checkPractiScoreExportFileChange() {
+
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			while(true) {
 				Thread.sleep(1000);
-				System.out.println("Checking file");
-				File exportFile = new File("scores.psc");
+				System.out.println("Checking file...");
+				String exportFilePath = "/PractiScore/Match/My_First_Match_Export.psc";
+				File exportFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+						+ exportFilePath);
 				Long fileModifiedTime = exportFile.lastModified();
 				if (lastModified != null && lastModified.equals(fileModifiedTime)) continue;
 				System.out.println("File modified!");
@@ -33,7 +36,7 @@ public class FileService {
 					});
 					System.out.println("File modified, time: " + lastModified);
 					lastModified = fileModifiedTime;
-					// HttpService.sendMatchScore(matchScore);
+					HttpService.sendMatchScore(jsonString);
 				}
 			}
 

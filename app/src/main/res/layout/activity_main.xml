@@ -18,6 +18,12 @@
         android:inputType="text|textPersonName"
         android:text="" />
 
+    <Button
+        android:id="@+id/serverAddressOkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok" />
+
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
@@ -37,7 +43,7 @@
         android:text="Seuranta päälle/pois:" />
 
     <ToggleButton
-        android:id="@+id/toggleButton2"
+        android:id="@+id/toggleService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="ToggleButton" />

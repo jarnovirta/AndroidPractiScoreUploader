@@ -15,6 +15,8 @@ import java.util.TimerTask;
  * Created by Jarno on 31.12.2017.
  */
 
+// TODO: Make this a foreground service by calling startForegournd()
+	// https://stackoverflow.com/a/9696962/4070597
 public class TestService extends Service {
 
 	// constant
@@ -27,6 +29,7 @@ public class TestService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
+		Log.d("TestService", "Test service bind called");
 		return null;
 	}
 
@@ -42,13 +45,13 @@ public class TestService extends Service {
 		}
 		// schedule task
 		mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0, NOTIFY_INTERVAL);
-		return Service.START_NOT_STICKY;
+		return Service.START_STICKY;
 	}
 
 	class TimeDisplayTimerTask extends TimerTask {
 		@Override
 		public void run() {
-			Log.d("TestService", "Test service scheduled task");
+			FileService.checkPractiScoreExportFileChange();
 		}
 	}
 }
