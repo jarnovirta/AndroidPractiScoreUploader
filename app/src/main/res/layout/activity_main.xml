@@ -1,35 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-
-
-
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/export_file_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Valitse PractiScore export-tiedosto:" />
+        android:layout_margin="10dp"
+        android:text="@string/export_file_label" />
+
+    <TextView
+        android:id="@+id/match_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/export_file_label"
+        android:text="Haurin kinkkukisa"/>
+    <Button
+        android:id="@+id/select_file_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/match_name"
+        android:layout_margin="10dp"
+        android:text="@string/select_file_button" />
+
+    <View
+        android:id="@+id/after_file_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/select_file_button"/>
+
+    <TextView
+        android:id="@+id/server_address_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/after_file_separator"
+        android:layout_margin="10dp"
+        android:text="@string/server_address_label" />
+
+    <TextView
+        android:id="@+id/server_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/server_address_label"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20dp"
+
+        android:text="www.codegizmos.com/IPSCResultServer"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/edit_server_address_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Valitse" />
+        android:layout_below="@id/server_address"
+        android:layout_marginBottom="10dp"
+        android:text="@string/edit_server_address_button" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Seuranta päälle/pois:" />
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/edit_server_address_button"/>
 
     <ToggleButton
         android:id="@+id/toggleService"
         android:layout_width="match_parent"
+        android:textOff="@string/toggle_button_off_text"
+        android:textOn="@string/toggle_button_on_text"
         android:layout_height="wrap_content"
-        android:text="ToggleButton" />
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+</RelativeLayout>
