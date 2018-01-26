@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
 		toggleServiceButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Log.d("onCreate", "*** STARTING TEST SERVICE ***");
-				Intent intent = new Intent(mainActivity, TestService.class);
-				startService(intent);
+//				Intent intent = new Intent(mainActivity, TestService.class);
+//				startService(intent);
 			}
 		});
 
