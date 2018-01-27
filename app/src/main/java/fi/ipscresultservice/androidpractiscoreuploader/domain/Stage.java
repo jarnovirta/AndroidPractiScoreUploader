@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.lang.annotation.Target;
 import java.util.Calendar;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

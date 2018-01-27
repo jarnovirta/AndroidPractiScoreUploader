@@ -39,20 +39,29 @@ import fi.ipscresultservice.androidpractiscoreuploader.practiscorefileparser.Pra
 import fi.ipscresultservice.androidpractiscoreuploader.practiscorefileparser.PractiScoreFileType;
 
 
-// TODO: HttpClient deprecated, does not work in Samsung.
 public class HttpService {
 	private static final String TAG = HttpService.class.getSimpleName();
 	private static String serverUrl = "http://86.115.27.2:8080/IPSCResultServer/api/matches";
 
 	public static void sendRequest() {
-		Log.d(TAG, "Calling SendPostRequest");
+		serverUrl = "http://86.115.27.2:8080/IPSCResultServer/api/matches";
+		Log.d(TAG, "Reading match def");
 		File file = FileService.readPractiScoreExportFile();
 		String json = PractiScoreFileParser.readMatchScoreData(file, PractiScoreFileType.MATCH_DEF);
-
+		Log.d(TAG, "Sending match def");
 		new SendPostRequest(serverUrl, json).execute();
+
 	}
 
-
+	// TODO: Remove test method:
+	public static void sendMatchResultData() {
+		Log.d(TAG, "Reading match scores");
+		File file = FileService.readPractiScoreExportFile();
+		String json = PractiScoreFileParser.readMatchScoreData(file, PractiScoreFileType.MATCH_SCORES);
+		String matchScoresUrl = "http://86.115.27.2:8080/IPSCResultServer/api/matches/matchId/scores";
+		Log.d(TAG, "Sending match scores");
+		new SendPostRequest(matchScoresUrl, json).execute();
+	}
 	public static void setServerUrl(String url) {
 		serverUrl = url;
 	}
@@ -60,96 +69,3 @@ public class HttpService {
 	public static String getServerUrl() { return serverUrl; }
 
 }
-
-
-//	private class CallAPI extends AsyncTask<String, String, String> {
-//
-//		public CallAPI(){
-//			//set context variables if required
-//		}
-//
-//		@Override
-//		protected void onPreExecute() {
-//			super.onPreExecute();
-//		}
-
-//		@Override
-//		protected String doInBackground(String... params) {
-//			String urlString = params[0]; // URL to call
-//			String data = params[1]; //data to post
-//			OutputStream out = null;
-//			try {
-//				URL url = new URL(urlString);
-//				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//				urlConnection.setRequestMethod("POST");
-//				urlConnection.setReadTimeout(15000);
-//				urlConnection.setConnectTimeout(15000);
-//				urlConnection.setDoInput(true);
-//				urlConnection.setDoOutput(true);
-//
-//				out = new BufferedOutputStream(urlConnection.getOutputStream());
-//				BufferedWriter writer = new BufferedWriter (new OutputStreamWriter(out, "UTF-8"));
-//				writer.write(data);
-//				writer.flush();
-//				writer.close();
-//				out.close();
-//				urlConnection.connect();
-//
-//			} catch (Exception e) {
-//				System.out.println(e.getMessage());
-//			}
-//			return null;
-//		}
-//	}
-
-//	private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
-//		StringBuilder result = new StringBuilder();
-//		boolean first = true;
-//		for(Map.Entry<String, String> entry : params.entrySet()){
-//			if (first)
-//				first = false;
-//			else
-//				result.append("&");
-//
-//			result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-//			result.append("=");
-//			result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-//		}
-//
-//		return result.toString();
-//	}
-
-
-
-
-
-
-
-//	public static void sendMatchScore(String json) {
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		CloseableHttpClient httpClient = null;
-//		try {
-//			Log.d(TAG, "Sending match score to server");
-//			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//			StrictMode.setThreadPolicy(policy);
-//			Log.d(TAG, "Build client");
-////			httpClient = HttpClientBuilder.create().build();
-//
-//			Log.d(TAG, "Send message");
-//			HttpPost request = new HttpPost(serverUrl);
-
-//			StringEntity params = new StringEntity(json);
-//			request.addHeader("content-type", "application/json");
-//			request.setEntity(params);
-//
-//			HttpResponse response = httpClient.execute(request);
-
-//			String responseString = new BasicResponseHandler().handleResponse(response);
-//			Log.d(TAG, "JSON sent. Response : " + responseString);
-//			httpClient.close();
-//
-//		} catch (Exception ex) {
-//			Log.d("HttpService", "Error " + ex.getCause());
-//			ex.printStackTrace();
-//		}
-//	}

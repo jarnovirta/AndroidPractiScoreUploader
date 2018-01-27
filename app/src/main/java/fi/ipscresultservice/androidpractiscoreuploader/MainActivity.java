@@ -230,17 +230,7 @@ public class MainActivity extends AppCompatActivity {
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			super.onReceiveResult(resultCode, resultData);
-			Log.d(TAG, "Received " + resultData.getString("result"));
-		}
-	}
-	private Notification buildForegroundNotification() {
-		NotificationCompat.Builder b = new NotificationCompat.Builder(this);
-		b.setOngoing(true)
-				.setContentTitle("Uploader")
-				.setContentText("Content text")
-				.setSmallIcon(android.R.drawable.stat_sys_download)
-				.setTicker("Ticker");
 
-		return(b.build());
+		}
 	}
 }

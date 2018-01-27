@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -17,6 +18,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
 
 /**
  * Created by Jarno on 27.1.2018.
@@ -39,16 +42,12 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
 	protected String doInBackground(String... arg0) {
 
 		try {
-			URL url = new URL("http://86.115.27.2:8080/IPSCResultServer/api/matches");
-			Log.d(TAG, "Sending JSON string: " + json);
-//			JSONObject postDataParams = new JSONObject();
-//			postDataParams.put("name", "abc");
-//			postDataParams.put("email", "abc@gmail.com");
+			URL url = new URL(serverUrl);
+			Log.d(TAG, "Sending to URL" + serverUrl);
 
-//			Log.i("params", postDataParams.toString());
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(15000 /* milliseconds */);
-			conn.setConnectTimeout(15000 /* milliseconds */);
+			conn.setReadTimeout(60000 /* milliseconds */);
+			conn.setConnectTimeout(60000/* milliseconds */);
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 
@@ -58,7 +57,7 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
 			OutputStream os = conn.getOutputStream();
 			BufferedWriter writer = new BufferedWriter(
 					new OutputStreamWriter(os, "UTF-8"));
-//			writer.write(getPostDataString(postDataParams));
+
 			writer.write(json);
 			Log.i(TAG, "Flushing writer");
 			writer.flush();
@@ -66,10 +65,9 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
 			os.close();
 			Log.i(TAG, "Connection closed");
 			int responseCode = conn.getResponseCode();
-			String responseMessage = conn.getResponseMessage();
 			Log.i(TAG, "Handing response");
 			if (responseCode == HttpsURLConnection.HTTP_OK) {
-				Log.e(TAG, "Response ok");
+				Log.i(TAG, "Response ok");
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(
 								conn.getInputStream()));
@@ -82,13 +80,14 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
 				}
 
 				in.close();
+
 				return sb.toString();
 
 			} else {
-				return new String("false : " + responseMessage);
+				return new String("false : " + responseCode);
 			}
 		} catch (Exception e) {
-			Log.e(TAG, "Error sending data: " + e.getMessage());
+			Log.e(TAG, "Error sending data: " + e.getStackTrace());
 			return new String("Exception: " + e.getMessage());
 		}
 	}
