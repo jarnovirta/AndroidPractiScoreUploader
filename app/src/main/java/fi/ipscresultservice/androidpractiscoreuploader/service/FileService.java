@@ -45,7 +45,7 @@ public class FileService {
 					matchScore = objectMapper.readValue(jsonString, new TypeReference<MatchScore>() {
 						});
 					lastModified = fileModifiedTime;
-					HttpService.sendMatchScore(jsonString);
+//					HttpService.sendMatchScore(jsonString);
 				}
 			}
 
@@ -55,7 +55,7 @@ public class FileService {
 		return matchScore;
 	}
 
-	private static File readPractiScoreExportFile() {
+	public static File readPractiScoreExportFile() {
 		try {
 			if (practiScoreExportFileUri == null) return null;
 			final File tempFile = File.createTempFile("PSUploader", "psc");

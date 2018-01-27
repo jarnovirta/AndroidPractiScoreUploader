@@ -151,8 +151,11 @@ public class MainActivity extends AppCompatActivity {
 
 		editServerAddressButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(mainActivity, EnterServerAddressActivity.class);
-				startActivityForResult(i, EDIT_SERVER_ADDRESS_REQUEST_CODE);
+				// TODO: REMOVE:
+				HttpService.sendRequest();
+
+//				Intent i = new Intent(mainActivity, EnterServerAddressActivity.class);
+//				startActivityForResult(i, EDIT_SERVER_ADDRESS_REQUEST_CODE);
 			}
 		});
 		selectFileButton.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
 		toggleUploadServiceButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				boolean buttonsEnabled = true;
+
 				if (toggleUploadServiceButton.isChecked()) {
 					buttonsEnabled = false;
 					Log.d(TAG, "MainActivity in main thread. Thread: " + Thread.currentThread().getName());
