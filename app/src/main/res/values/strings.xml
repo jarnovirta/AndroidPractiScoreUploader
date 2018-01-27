@@ -9,6 +9,7 @@
     <string name="error_label">ERROR:</string>
     <string name="toggle_button_on_text">Tracking On</string>
     <string name="toggle_button_off_text">Tracking Off</string>
+    <string name="exit_button">Exit</string>
 
     <!--Edit server address activity-->
     <string name="enter_url_label">Enter server address:</string>

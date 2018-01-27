@@ -18,8 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import org.apache.http.protocol.HTTP;
-
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.TestService;
@@ -37,9 +35,13 @@ public class MainActivity extends AppCompatActivity {
 	private TextView errorViewLabel;
 	private RelativeLayout infoViewGroup;
 	private ToggleButton toggleUploadServiceButton;
+	private Button exitButton;
 
 	private final int EDIT_SERVER_ADDRESS_REQUEST_CODE = 1;
 	private final int CHOOSE_FILE_REQUEST_CODE = 2;
+
+	private final int EXIT_CODE_OK = 0;
+	private final int EXIT_CODE_PERMISSIONS_NOT_GRANTED = 1;
 
 	private String errorStatusMessage;
 
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 		infoViewGroup.setVisibility(View.INVISIBLE);
 
 		toggleUploadServiceButton = findViewById(R.id.toggle_upload_service_button);
-
+		exitButton = findViewById(R.id.exit_button);
 		setButtonClickListeners();
 		setToggleUploadServiceButtonEnabled();
 		loadAppData();
@@ -107,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
 					Log.d(TAG, "App permissions granted");
 				} else {
 					Log.i(TAG, "App permissions not granted. Exiting.");
-					final int ERROR_CODE_PERMISSIONS_NOT_GRANTED = 1;
-					System.exit(ERROR_CODE_PERMISSIONS_NOT_GRANTED);
+
+					System.exit(EXIT_CODE_PERMISSIONS_NOT_GRANTED);
 				}
 			}
 		}
@@ -160,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(mainActivity, TestService.class);
 //				startService(intent);
+			}
+		});
+		exitButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				System.exit(EXIT_CODE_OK);
 			}
 		});
 	}
