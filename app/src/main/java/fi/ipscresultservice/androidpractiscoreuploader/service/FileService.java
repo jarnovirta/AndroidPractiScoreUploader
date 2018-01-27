@@ -1,40 +1,49 @@
 package fi.ipscresultservice.androidpractiscoreuploader.service;
 
-import android.os.Environment;
+import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
+import org.apache.commons.io.IOUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+
+import fi.ipscresultservice.androidpractiscoreuploader.MainActivity;
+import fi.ipscresultservice.androidpractiscoreuploader.UploaderApp;
+import fi.ipscresultservice.androidpractiscoreuploader.domain.Match;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.MatchScore;
 import fi.ipscresultservice.androidpractiscoreuploader.practiscorefileparser.PractiScoreFileParser;
+import fi.ipscresultservice.androidpractiscoreuploader.practiscorefileparser.PractiScoreFileType;
 
 
 public class FileService {
 	private static MatchScore matchScore = null;
 	private static Long lastModified = null;
+	private static Uri practiScoreExportFileUri;
+
+	private static String matchName;
 
 	public static MatchScore checkPractiScoreExportFileChange() {
-
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			while(true) {
 				Thread.sleep(1000);
-				System.out.println("Checking file...");
-				String exportFilePath = "/PractiScore/Match/My_First_Match_Export.psc";
-				File exportFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-						+ exportFilePath);
-				Long fileModifiedTime = exportFile.lastModified();
+				Log.d("FileService", "Checking file...");
+				File practiScoreExportFile = readPractiScoreExportFile();
+				Long fileModifiedTime = practiScoreExportFile.lastModified();
 				if (lastModified != null && lastModified.equals(fileModifiedTime)) continue;
-				System.out.println("File modified!");
-				String jsonString = PractiScoreFileParser.readMatchScoreData(exportFile);
+				Log.d("FileService", "File modified!...");
+				String jsonString = PractiScoreFileParser.readMatchScoreData(practiScoreExportFile, PractiScoreFileType.MATCH_SCORES);
 				if (jsonString != null) {
-					System.out.println("Sending JSON");
+					Log.d("FileService", "Sending JSON...");
 					matchScore = objectMapper.readValue(jsonString, new TypeReference<MatchScore>() {
-					});
-					System.out.println("File modified, time: " + lastModified);
+						});
 					lastModified = fileModifiedTime;
 					HttpService.sendMatchScore(jsonString);
 				}
@@ -46,40 +55,43 @@ public class FileService {
 		return matchScore;
 	}
 
-	public static File getPractiScoreExportFile() {
-		File practiScoreExportFile = null;
+	private static File readPractiScoreExportFile() {
 		try {
+			if (practiScoreExportFileUri == null) return null;
+			final File tempFile = File.createTempFile("PSUploader", "psc");
+			tempFile.deleteOnExit();
+			FileOutputStream out = new FileOutputStream(tempFile);
+			IOUtils.copy(UploaderApp.getAppContext().getContentResolver().openInputStream(practiScoreExportFileUri), out);
 
-			Log.d("Fileservice", "IS READABLE: " + isExternalStorageReadable());
-			String exportFilePath = "/PractiScore/Match/My_First_Match_Export.psc";
-			practiScoreExportFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-					+ exportFilePath);
-			Log.d("FileService", "Opened match file");
-
+			return tempFile;
 		}
 		catch (Exception e) {
-			Log.d("Fileservice", "ERROR opening directory", e);
-			e.printStackTrace();
+			Log.e("FileService", e.getMessage());
 		}
-		return practiScoreExportFile;
+		return null;
+ 	}
+	public static void setPractiScoreExportFileUri(Uri uri) {
+		practiScoreExportFileUri = uri;
+		File file = readPractiScoreExportFile();
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jsonString = PractiScoreFileParser.readMatchScoreData(file, PractiScoreFileType.MATCH_DEF);
+			if (jsonString != null) {
+				Match match = objectMapper.readValue(jsonString, new TypeReference<Match>() {
+				});
+				matchName = match.getName();
+			}
+
+		}
+		catch (IOException e) {
+			Log.e("FileService", e.getMessage());
+		}
+	}
+	public static String getPractiScoreExportFileMatchname() {
+		return matchName;
 	}
 
-	/* Checks if external storage is available for read and write */
-	public static boolean isExternalStorageWritable() {
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			return true;
-		}
-		return false;
-	}
-
-	/* Checks if external storage is available to at least read */
-	public static boolean isExternalStorageReadable() {
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state) ||
-				Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-			return true;
-		}
-		return false;
+	public static boolean isPractiScoreExportFileUriSet() {
+		return practiScoreExportFileUri != null;
 	}
 }

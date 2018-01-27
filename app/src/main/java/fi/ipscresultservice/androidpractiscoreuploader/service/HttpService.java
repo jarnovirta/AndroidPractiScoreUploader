@@ -23,8 +23,7 @@ import java.net.URLConnection;
 // TODO: HttpClient deprecated, does not work in Samsung.
 public class HttpService {
 
-	private static String serverUrl = "http://192.168.43.105:8080/IPSCResultServer/api/matches";
-	// private static String serverUrl = "";
+	private static String serverUrl;
 
 	public static void sendMatchScore(String json) {
 		// ObjectMapper objectMapper = new ObjectMapper();
@@ -54,7 +53,10 @@ public class HttpService {
 
 		}
 	}
-	public static void setServerAddress(String address) {
-		serverUrl = address;
+	public static void setServerUrl(String url) {
+		serverUrl = url;
 	}
+
+	public static String getServerUrl() { return serverUrl; }
+
 }

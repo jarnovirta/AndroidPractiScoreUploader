@@ -5,7 +5,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "fi.ipscresultservice.androidpractiscoreuploader"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"

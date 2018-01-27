@@ -1,18 +1,19 @@
 <resources>
     <string name="app_name">PractiScore Uploader</string>
 
-    <string name="enter_url_label">Enter server address:</string>
-    <string name="ok">Ok</string>
-    <string name="cancel">Cancel</string>
+    <!--Main activity -->
+    <string name="match_label">Match:</string>
+    <string name="edit_server_address_button">Edit Server Address</string>
+    <string name="server_address_label">Server:</string>
+    <string name="select_file_button">Select PractiScore Export File</string>
+    <string name="error_label">ERROR:</string>
     <string name="toggle_button_on_text">Tracking On</string>
     <string name="toggle_button_off_text">Tracking Off</string>
 
-    <string name="export_file_label">Match:</string>
-
-    <string name="edit_server_address_button">Edit Server Address</string>
-
-    <string name="server_address_label">Server:</string>
-
-    <string name="select_file_button">Select PractiScore Export File</string>
+    <!--Edit server address activity-->
+    <string name="enter_url_label">Enter server address:</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="info_label">Info:</string>
 
 </resources>
