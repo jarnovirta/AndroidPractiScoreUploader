@@ -1164,6 +1164,10 @@
         "source": "C:\\Users\\Jarno\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\282d70614f3f2b50ef09a6d9b3178974\\res\\color\\abc_tint_seek_thumb.xml"
     },
     {
+        "merged": "E:\\Ohjelmointi\\Android\\Android_PractiScore_uploader\\app\\build\\intermediates\\res\\merged\\debug\\layout_notification.xml.flat",
+        "source": "E:\\Ohjelmointi\\Android\\Android_PractiScore_uploader\\app\\src\\main\\res\\layout\\notification.xml"
+    },
+    {
         "merged": "E:\\Ohjelmointi\\Android\\Android_PractiScore_uploader\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_ic_voice_search_api_material.xml.flat",
         "source": "C:\\Users\\Jarno\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\282d70614f3f2b50ef09a6d9b3178974\\res\\drawable\\abc_ic_voice_search_api_material.xml"
     },
