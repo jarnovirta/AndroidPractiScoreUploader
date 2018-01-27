@@ -102,10 +102,10 @@ activity#fi.ipscresultservice.androidpractiscoreuploader.EnterServerAddressActiv
 ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:9-63
 	android:name
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:19-60
-service#fi.ipscresultservice.androidpractiscoreuploader.service.TestService
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:25:9-26:98
+service#fi.ipscresultservice.androidpractiscoreuploader.service.FileChangeTrackerService
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:25:9-26:111
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:13-95
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:13-108
 uses-sdk
 INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml

@@ -3,29 +3,19 @@ package fi.ipscresultservice.androidpractiscoreuploader.service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
-import fi.ipscresultservice.androidpractiscoreuploader.MainActivity;
-import fi.ipscresultservice.androidpractiscoreuploader.R;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderApp;
 
 
@@ -33,9 +23,9 @@ import fi.ipscresultservice.androidpractiscoreuploader.UploaderApp;
  * Created by Jarno on 31.12.2017.
  */
 
-public class TestService extends Service {
+public class FileChangeTrackerService extends Service {
 
-	private final String TAG = TestService.class.getSimpleName();
+	private final String TAG = FileChangeTrackerService.class.getSimpleName();
 
 	private ResultReceiver resultReceiver;
 	// constant
@@ -66,13 +56,8 @@ public class TestService extends Service {
 				Log.i(TAG, "Received Start Foreground Intent ");
 
 				initChannels(UploaderApp.getAppContext());
-				RemoteViews notificationView = new RemoteViews(this.getPackageName(),R.layout.notification);
 				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(UploaderApp.getAppContext(), "default");
 				Notification notification = notificationBuilder
-						.setContentTitle("nkDroid Music Player")
-						.setTicker("nkDroid Music Player")
-						.setContentText("nkDroid Music")
-						.setContent(notificationView)
 						.setOngoing(true).build();
 				startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE,
 						notification);
@@ -119,9 +104,9 @@ public class TestService extends Service {
 		NotificationManager notificationManager =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		NotificationChannel channel = new NotificationChannel("default",
-				"Channel name",
-				NotificationManager.IMPORTANCE_DEFAULT);
-		channel.setDescription("Channel description");
+				"PractiScore Uploader",
+				NotificationManager.IMPORTANCE_HIGH);
+		channel.setDescription("PractiScore Uploader Service Running");
 		notificationManager.createNotificationChannel(channel);
 	}
 }

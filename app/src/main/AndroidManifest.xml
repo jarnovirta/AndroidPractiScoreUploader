@@ -23,7 +23,7 @@
         </activity>
         <activity android:name="EnterServerAddressActivity" />
         <service
-            android:name="fi.ipscresultservice.androidpractiscoreuploader.service.TestService" />
+            android:name="fi.ipscresultservice.androidpractiscoreuploader.service.FileChangeTrackerService" />
     </application>
 
 </manifest>
