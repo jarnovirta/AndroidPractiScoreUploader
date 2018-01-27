@@ -10,21 +10,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ScoreCard {
 	@JsonProperty("shtr")
 	private String shooterId;
+
 	@JsonProperty("mod")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
 	private Calendar modified;
+
 	@JsonProperty("popm")
 	private int popperMisses;
+
 	@JsonProperty("poph")
 	private int popperHits;
+
 	@JsonProperty("popnpm")
 	private int popperNonPenaltyMisses;
+
 	@JsonProperty("rawpts")
 	private int points;
+
 	@JsonProperty("str")
 	private double[] time;
+
 	@JsonProperty("ts")
 	private int[] paperTargetHits;
+
+	@JsonProperty("proc")
+	private int proceduralPenalties;
 
 	public String getShooterId() {
 		return shooterId;
@@ -88,6 +98,14 @@ public class ScoreCard {
 
 	public void setPaperTargetHits(int[] paperTargetHits) {
 		this.paperTargetHits = paperTargetHits;
+	}
+
+	public int getProceduralPenalties() {
+		return proceduralPenalties;
+	}
+
+	public void setProceduralPenalties(int proceduralPenalties) {
+		this.proceduralPenalties = proceduralPenalties;
 	}
 
 }
