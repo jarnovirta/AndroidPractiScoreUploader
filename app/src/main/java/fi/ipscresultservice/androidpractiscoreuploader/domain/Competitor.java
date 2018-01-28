@@ -9,10 +9,12 @@ import java.util.Calendar;
 
 /**
  * Created by Jarno on 27.1.2018.
+ *
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@SuppressWarnings("unused")
 public class Competitor {
 
 	@JsonProperty("sh_uuid")

@@ -23,6 +23,7 @@ import fi.ipscresultservice.androidpractiscoreuploader.UploaderApp;
  * Created by Jarno on 31.12.2017.
  */
 
+@SuppressWarnings("ConstantConditions")
 public class FileTrackerService extends Service {
 
 	private final String TAG = FileTrackerService.class.getSimpleName();
@@ -96,6 +97,7 @@ public class FileTrackerService extends Service {
 			Log.d(TAG, "Timer task " + counter++ + " Thread: " + Thread.currentThread().getName());
 		}
 	}
+
 
 	public void initChannels(Context context) {
 		if (Build.VERSION.SDK_INT < 26) {

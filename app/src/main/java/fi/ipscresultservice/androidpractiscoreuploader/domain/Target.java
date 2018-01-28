@@ -10,12 +10,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@SuppressWarnings("unused")
 public class Target {
 	@JsonProperty("target_number")
-	int targetNumber;
+	private int targetNumber;
 
 	@JsonProperty("target_reqshots")
-	int requiredShots;
+	private int requiredShots;
 
 
 	public int getRequiredShots() {
