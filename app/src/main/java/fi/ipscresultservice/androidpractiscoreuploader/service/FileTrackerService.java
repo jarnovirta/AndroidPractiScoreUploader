@@ -23,16 +23,16 @@ import fi.ipscresultservice.androidpractiscoreuploader.UploaderApp;
  * Created by Jarno on 31.12.2017.
  */
 
-public class FileChangeTrackerService extends Service {
+public class FileTrackerService extends Service {
 
-	private final String TAG = FileChangeTrackerService.class.getSimpleName();
+	private final String TAG = FileTrackerService.class.getSimpleName();
 
 	private ResultReceiver resultReceiver;
 	// constant
 	public static final long CHECK_FILE_MODIFIED_INTERVAL = 2 * 1000;
 
 	// timer handling
-	private Timer mTimer = null;
+	private Timer checkFileTimer = null;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -63,14 +63,14 @@ public class FileChangeTrackerService extends Service {
 						notification);
 
 				// cancel if already existed
-				if(mTimer != null) {
-					mTimer.cancel();
+				if(checkFileTimer != null) {
+					checkFileTimer.cancel();
 				} else {
 					// recreate new
-					mTimer = new Timer();
+					checkFileTimer = new Timer();
 				}
 				// schedule task
-				mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0, CHECK_FILE_MODIFIED_INTERVAL);
+				checkFileTimer.scheduleAtFixedRate(new FileModifiedTimerTask(), 0, CHECK_FILE_MODIFIED_INTERVAL);
 			}
 
 			else if (intent.getAction().equals(Constants.ACTION.STOPFOREGROUND_ACTION)) {
@@ -85,11 +85,11 @@ public class FileChangeTrackerService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "Test service destroy called. Cancelling timer." + Thread.currentThread().getName());
-		if (mTimer != null) mTimer.cancel();
+		if (checkFileTimer != null) checkFileTimer.cancel();
 	}
 
-	class TimeDisplayTimerTask extends TimerTask {
-		private final String TAG = TimeDisplayTimerTask.class.getSimpleName();
+	class FileModifiedTimerTask extends TimerTask {
+		private final String TAG = FileModifiedTimerTask.class.getSimpleName();
 		private int counter = 0;
 		@Override
 		public void run() {
