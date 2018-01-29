@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
-import fi.ipscresultservice.androidpractiscoreuploader.UploaderApp;
+import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
 
 
 /**
@@ -56,8 +56,8 @@ public class FileTrackerService extends Service {
 			if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
 				Log.i(TAG, "Received Start Foreground Intent ");
 
-				initChannels(UploaderApp.getAppContext());
-				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(UploaderApp.getAppContext(), "default");
+				initChannels(UploaderAppContext.getAppContext());
+				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(UploaderAppContext.getAppContext(), "default");
 				Notification notification = notificationBuilder
 						.setOngoing(true).build();
 				startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE,
@@ -94,7 +94,8 @@ public class FileTrackerService extends Service {
 		private int counter = 0;
 		@Override
 		public void run() {
-			Log.d(TAG, "Timer task " + counter++ + " Thread: " + Thread.currentThread().getName());
+			Log.d(TAG, "Timer task calling check file changed");
+			FileService.checkPractiScoreExportFileModified();
 		}
 	}
 

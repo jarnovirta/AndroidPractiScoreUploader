@@ -83,11 +83,11 @@ MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\Jarno\.gradle\caches
 	android:theme
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:17:9-40
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:10:9-83
-activity#fi.ipscresultservice.androidpractiscoreuploader.MainActivity
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:10:9-90
+activity#fi.ipscresultservice.androidpractiscoreuploader.activity.MainActivity
 ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:18:9-23:20
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:18:19-47
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:18:19-56
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
 ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:19:13-22:29
 action#android.intent.action.MAIN
@@ -98,14 +98,14 @@ category#android.intent.category.LAUNCHER
 ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:21:17-77
 	android:name
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:21:27-74
-activity#fi.ipscresultservice.androidpractiscoreuploader.EnterServerAddressActivity
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:9-63
+activity#fi.ipscresultservice.androidpractiscoreuploader.activity.EnterServerAddressActivity
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:9-73
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:19-60
-service#fi.ipscresultservice.androidpractiscoreuploader.service.FileChangeTrackerService
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:25:9-26:111
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:19-70
+service#fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:25:9-26:105
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:13-108
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:13-102
 uses-sdk
 INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml

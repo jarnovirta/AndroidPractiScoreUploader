@@ -1,4 +1,4 @@
-package fi.ipscresultservice.androidpractiscoreuploader;
+package fi.ipscresultservice.androidpractiscoreuploader.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import fi.ipscresultservice.androidpractiscoreuploader.Constants;
+import fi.ipscresultservice.androidpractiscoreuploader.R;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService;
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 		}
 		if (requestCode == CHOOSE_FILE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 			if (data.getData() != null) {
-				FileService.setPractiScoreExportFileUri(data.getData());
+				FileService.setPractiScoreExportFilePath(data.getData());
 				matchNameTextView.setText(FileService.getPractiScoreExportFileMatchname());
 			}
 		}
@@ -149,11 +151,8 @@ public class MainActivity extends AppCompatActivity {
 
 		editServerAddressButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				// TODO: REMOVE:
-				HttpService.sendRequest();
-
-//				Intent i = new Intent(mainActivity, EnterServerAddressActivity.class);
-//				startActivityForResult(i, EDIT_SERVER_ADDRESS_REQUEST_CODE);
+				Intent i = new Intent(mainActivity, EnterServerAddressActivity.class);
+				startActivityForResult(i, EDIT_SERVER_ADDRESS_REQUEST_CODE);
 			}
 		});
 		selectFileButton.setOnClickListener(new View.OnClickListener() {
@@ -170,16 +169,10 @@ public class MainActivity extends AppCompatActivity {
 
 				if (toggleUploadServiceButton.isChecked()) {
 					buttonsEnabled = false;
-					Log.d(TAG, "MainActivity in main thread. Thread: " + Thread.currentThread().getName());
-//					startFileTrackerService();
-					Intent startIntent = new Intent(MainActivity.this, FileTrackerService.class);
-					startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
-					startService(startIntent);
+					startFileTrackerService();
 				}
 				else {
-					Intent stopIntent = new Intent(MainActivity.this, FileTrackerService.class);
-					stopIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
-					startService(stopIntent);
+					stopFileTrackerService();
 				}
 				editServerAddressButton.setEnabled(buttonsEnabled);
 				selectFileButton.setEnabled(buttonsEnabled);
@@ -207,17 +200,20 @@ public class MainActivity extends AppCompatActivity {
 
 	private void startFileTrackerService() {
 		Log.d(TAG, "Starting file tracker service");
+
+		Intent startIntent = new Intent(MainActivity.this, FileTrackerService.class);
+		startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
 		ResultReceiver fileTrackerResultReceiver = new FileTrackerResultReceiver(null);
-		Intent intent = new Intent(this, FileTrackerService.class);
-		intent.putExtra(Constants.EXTRAS_RESULT_RECEIVER_KEY, fileTrackerResultReceiver);
-		startService(intent);
+		startIntent.putExtra(Constants.EXTRAS_RESULT_RECEIVER_KEY, fileTrackerResultReceiver);
+		startService(startIntent);
 
 	}
 
 	private void stopFileTrackerService() {
 		Log.d(TAG, "Stopping file tracker service");
-		Intent intent = new Intent(this, FileTrackerService.class);
-		stopService(intent);
+		Intent stopIntent = new Intent(MainActivity.this, FileTrackerService.class);
+		stopIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
+		startService(stopIntent);
 	}
 	private class FileTrackerResultReceiver extends ResultReceiver {
 

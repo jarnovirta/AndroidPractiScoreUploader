@@ -1,11 +1,8 @@
-package fi.ipscresultservice.androidpractiscoreuploader;
+package fi.ipscresultservice.androidpractiscoreuploader.service;
 
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-
-import org.apache.http.protocol.HTTP;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,25 +11,23 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
+import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
 
 /**
  * Created by Jarno on 27.1.2018.
  */
 
-public class SendPostRequest extends AsyncTask<String, Void, String> {
+public class SendPostRequestTask extends AsyncTask<String, Void, String> {
 	private String serverUrl;
 	private String json;
 
-	private final String TAG = SendPostRequest.class.getSimpleName();
+	private final String TAG = SendPostRequestTask.class.getSimpleName();
 
 
-	public SendPostRequest(String serverUrl, String json) {
+	public SendPostRequestTask(String serverUrl, String json) {
 		this.serverUrl = serverUrl;
 		this.json = json;
 	}
@@ -93,25 +88,7 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
 	}
 	@Override
 	protected void onPostExecute(String result) {
-		Toast.makeText(UploaderApp.getAppContext(), result,
+		Toast.makeText(UploaderAppContext.getAppContext(), result,
 				Toast.LENGTH_LONG).show();
-	}
-
-	public String getPostDataString(JSONObject params) throws Exception {
-		StringBuilder result = new StringBuilder();
-		boolean first = true;
-		Iterator<String> itr = params.keys();
-		while(itr.hasNext()){
-			String key= itr.next();
-			Object value = params.get(key);
-			if (first)
-				first = false;
-			else
-				result.append("&");
-			result.append(URLEncoder.encode(key, "UTF-8"));
-			result.append("=");
-			result.append(URLEncoder.encode(value.toString(), "UTF-8"));
-		}
-		return result.toString();
 	}
 }
