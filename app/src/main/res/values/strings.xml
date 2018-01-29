@@ -10,11 +10,13 @@
     <string name="toggle_button_on_text">Tracking On</string>
     <string name="toggle_button_off_text">Tracking Off</string>
     <string name="exit_button">Exit</string>
-
+    <string name="test_connection_button">Test connection</string>
+    <string name="last_transmission_time_label">Data sent:</string>
+    <string name="last_transmission_status_label">Status:</string>
     <!--Edit server address activity-->
     <string name="enter_url_label">Enter server address:</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
-    <string name="info_label">Info:</string>
+    <string name="info_label">INFO:</string>
 
 </resources>

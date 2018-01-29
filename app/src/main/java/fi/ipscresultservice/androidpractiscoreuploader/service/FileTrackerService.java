@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.support.v4.app.NotificationCompat;
@@ -14,6 +15,8 @@ import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.transform.Result;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
@@ -28,11 +31,7 @@ public class FileTrackerService extends Service {
 
 	private final String TAG = FileTrackerService.class.getSimpleName();
 
-	private ResultReceiver resultReceiver;
-	// constant
-	public static final long CHECK_FILE_MODIFIED_INTERVAL = 2 * 1000;
 
-	// timer handling
 	private Timer checkFileTimer = null;
 
 	@Override
@@ -44,14 +43,8 @@ public class FileTrackerService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 			Log.i(TAG, "Received Start Foreground Intent ");
-			resultReceiver = intent.getParcelableExtra(Constants.EXTRAS_RESULT_RECEIVER_KEY);
 
-//			Bundle bundle = new Bundle();
-//			bundle.putString("result", "Test result");
-//			resultReceiver.send(1, bundle);
-//			bundle = new Bundle();
-//			bundle.putString("result", "Second test result");
-//			resultReceiver.send(1, bundle);
+			FileService.setLastModifiedToZero();
 
 			if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
 				Log.i(TAG, "Received Start Foreground Intent ");
@@ -71,7 +64,7 @@ public class FileTrackerService extends Service {
 					checkFileTimer = new Timer();
 				}
 				// schedule task
-				checkFileTimer.scheduleAtFixedRate(new FileModifiedTimerTask(), 0, CHECK_FILE_MODIFIED_INTERVAL);
+				checkFileTimer.scheduleAtFixedRate(new FileModifiedTimerTask(), 0, Constants.CHECK_FILE_MODIFIED_INTERVAL);
 			}
 
 			else if (intent.getAction().equals(Constants.ACTION.STOPFOREGROUND_ACTION)) {
@@ -112,4 +105,5 @@ public class FileTrackerService extends Service {
 		channel.setDescription("PractiScore Uploader Service Running");
 		notificationManager.createNotificationChannel(channel);
 	}
+
 }

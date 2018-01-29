@@ -49,21 +49,35 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="20dp" />
 
-    <Button
-        android:id="@+id/edit_server_address_button"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/server_address_view_group"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/server_address"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="@string/edit_server_address_button" />
+        android:layout_below="@+id/server_address">
+        <Button
+            android:id="@+id/edit_server_address_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/edit_server_address_button" />
+        <Button
+            android:id="@+id/test_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:text="@string/test_connection_button" />
+    </RelativeLayout>
+
 
     <View
         android:id="@+id/after_server_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_below="@id/edit_server_address_button"/>
+        android:layout_below="@id/server_address_view_group"/>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/info_view_group"
@@ -80,36 +94,45 @@
             android:text="@string/info_label"/>
 
         <TextView
-            android:id="@+id/info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/info_label"
-            android:layout_margin="10dp"
-            android:text="Some information here"/>
-
-        <TextView
-            android:id="@+id/error_label"
+            android:id="@+id/last_transmission_time_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/info"
-            android:text="@string/error_label"/>
+            android:layout_below="@+id/info_label"
+            android:text="@string/last_transmission_time_label"/>
 
         <TextView
-            android:id="@+id/error"
+            android:id="@+id/last_transmission_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/error_label"
-            android:layout_margin="10dp"
-            android:text="Some error here"/>
+            android:layout_toRightOf="@id/last_transmission_time_label"
+            android:layout_alignBaseline="@id/last_transmission_time_label"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:id="@+id/last_transmission_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/last_transmission_time_label"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/last_transmission_status_label"/>
+
+        <TextView
+            android:id="@+id/last_transmission_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/last_transmission_status_label"
+            android:layout_alignBaseline="@id/last_transmission_status_label"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"/>
 
         <View
             android:id="@+id/after_info_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_below="@+id/error"/>
+            android:layout_below="@+id/last_transmission_status_label"/>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"

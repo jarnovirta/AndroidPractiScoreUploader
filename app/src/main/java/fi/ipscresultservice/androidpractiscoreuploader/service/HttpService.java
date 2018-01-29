@@ -1,6 +1,7 @@
 package fi.ipscresultservice.androidpractiscoreuploader.service;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,72 +16,74 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.Match;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.MatchScore;
-import fi.ipscresultservice.androidpractiscoreuploader.practiscorefileparser.PractiScoreFileParser;
-import fi.ipscresultservice.androidpractiscoreuploader.practiscorefileparser.PractiScoreFileType;
 
 
 public class HttpService {
 	private static final String TAG = HttpService.class.getSimpleName();
 
-	private static String serverUrl = "http://86.115.27.2:8080/IPSCResultServer";
+	private static String serverUrl;
+	private static final String matchDefPath =  "/api/matches";
+	private static final String matchResultsPath =  "/api/matches/matchId/scores";
+	private static final String testConnectionPath = "/api/testConnection";
 
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
-	public static void sendMatchDefinitionData(Match match) {
+	public static int sendMatchDefinitionData(Match match) {
 		try {
 			Log.d(TAG, "Sending match def");
-			String url = serverUrl + "/api/matches";
+			String url = serverUrl + matchDefPath;
 			String json = objectMapper.writeValueAsString(match);
-			sendPostRequest(json, url);
-	//		new SendPostRequestTask(url, json).execute();
+			return sendPost(json, url, 20000);
+
 		}
 		catch (Exception e) {
 			Log.e(TAG, e.getStackTrace().toString());
+			return -1;
 		}
 	}
 
-	public static void sendMatchResultData(MatchScore matchScore) {
+	public static int sendMatchResultData(MatchScore matchScore) {
 		try {
 			Log.d(TAG, "Reading match scores");
-			String url = serverUrl + "/api/matches/matchId/scores";
-			File file = new File(FileService.getPraciScoreExportFilePath());
+			String url = serverUrl + matchResultsPath;
 			String json = objectMapper.writeValueAsString(matchScore);
-			sendPostRequest(json, url);
+			return sendPost(json, url, 40000);
 		}
 		catch (Exception e) {
-			Log.e(TAG, e.getStackTrace().toString());
+			Log.e(TAG, e.getMessage());
+			return -1;
 		}
-
 	}
 
-	private static String sendPostRequest(String json, String serverUrlString) {
-		Log.d(TAG, "Sending json: " + json);
-		Log.d(TAG, "Sending to url: " + serverUrlString);
+
+	public static int sendPost(String json, String serverUrlString, int timeout) {
+		Log.d(TAG, "Sending POST request to url: " + serverUrlString);
+		int responseCode = -1;
 		try {
 			URL url = new URL(serverUrlString);
 
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(60000 /* milliseconds */);
-			conn.setConnectTimeout(60000/* milliseconds */);
+			conn.setReadTimeout(timeout);
+			conn.setConnectTimeout(timeout);
+
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
-
 			OutputStream os = conn.getOutputStream();
 			BufferedWriter writer = new BufferedWriter(
 					new OutputStreamWriter(os, "UTF-8"));
-
 			writer.write(json);
-			Log.i(TAG, "Flushing writer");
+
 			writer.flush();
 			writer.close();
+
 			os.close();
-			Log.i(TAG, "Connection closed");
-			int responseCode = conn.getResponseCode();
+			responseCode = conn.getResponseCode();
 			Log.i(TAG, "Handing response");
 			if (responseCode == HttpsURLConnection.HTTP_OK) {
 				Log.i(TAG, "Response ok");
@@ -94,26 +97,26 @@ public class HttpService {
 					sb.append(line);
 					break;
 				}
-
 				in.close();
-
-				return sb.toString();
-
-			} else {
-				return new String("false : " + responseCode);
 			}
+
 		} catch (Exception e) {
-			Log.e(TAG, "Error sending data: " + e.getStackTrace());
-			return new String("Exception: " + e.getMessage());
+			Log.e(TAG, "Error sending data: " + e.getMessage());
+
 		}
+		return responseCode;
 	}
 
+	public static void testConnection() {
+		Toast.makeText(UploaderAppContext.getAppContext(), "Testing connection...",
+				Toast.LENGTH_SHORT).show();
+		new SendGetAsyncTask(serverUrl + testConnectionPath,
+				10000, new TestConnectionResponseHandler()).execute();
 
-
+	}
 	public static void setServerUrl(String url) {
 		serverUrl = url;
 	}
 
 	public static String getServerUrl() { return serverUrl; }
-
 }

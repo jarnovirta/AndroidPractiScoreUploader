@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
@@ -25,6 +26,7 @@ import fi.ipscresultservice.androidpractiscoreuploader.R;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService;
+import fi.ipscresultservice.androidpractiscoreuploader.service.ResultReceiverService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,21 +35,25 @@ public class MainActivity extends AppCompatActivity {
 
 	private TextView serverAddressTextView;
 	private TextView matchNameTextView;
-	private TextView infoView;
-	private TextView infoViewLabel;
-	private TextView errorView;
-	private TextView errorViewLabel;
+
+	private TextView dataSentTimeTextView;
+	private TextView statusTextView;
 	private RelativeLayout infoViewGroup;
 	private ToggleButton toggleUploadServiceButton;
 	private Button exitButton;
+	private Button testConnectionButton;
+	private Button editServerAddressButton;
+	private Button selectFileButton;
 
 	private final int EDIT_SERVER_ADDRESS_REQUEST_CODE = 1;
 	private final int CHOOSE_FILE_REQUEST_CODE = 2;
 
-	private final int EXIT_CODE_OK = 0;
-	private final int EXIT_CODE_PERMISSIONS_NOT_GRANTED = 1;
+	private String lastDataUploadTime;
 
-	private String errorStatusMessage;
+	private enum UploaderStatus {OK, ERROR;}
+
+	private UploaderStatus status;
+	private String uploaderStatusMessage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +64,8 @@ public class MainActivity extends AppCompatActivity {
 		serverAddressTextView = findViewById(R.id.server_address);
 		matchNameTextView = findViewById(R.id.match_name);
 
-		infoView = findViewById(R.id.info);
-		infoViewLabel = findViewById(R.id.info_label);
-		infoView.setVisibility(View.GONE);
-		infoViewLabel.setVisibility(View.GONE);
-
-		errorView = findViewById(R.id.error);
-		errorViewLabel = findViewById(R.id.error_label);
-		errorView.setVisibility(View.GONE);
-		errorViewLabel.setVisibility(View.GONE);
+		dataSentTimeTextView = findViewById(R.id.last_transmission_time);
+		statusTextView = findViewById(R.id.last_transmission_status);
 
 		infoViewGroup = findViewById(R.id.info_view_group);
 		infoViewGroup.setVisibility(View.INVISIBLE);
@@ -80,11 +79,9 @@ public class MainActivity extends AppCompatActivity {
 
 	private void setToggleUploadServiceButtonEnabled() {
 
-		// TODO: REMOVE COMMENT OUT
-//		if (FileService.isPractiScoreExportFileUriSet() && HttpService.getServerUrl() != null) {
-//			toggleUploadServiceButton.setEnabled(true);
-//		}
-//		else toggleUploadServiceButton.setEnabled(false);
+		if (FileService.isPractiScoreExportFileUriSet() && HttpService.getServerUrl() != null) {
+			toggleUploadServiceButton.setEnabled(true);
+		} else toggleUploadServiceButton.setEnabled(false);
 	}
 
 	@Override
@@ -145,8 +142,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void setButtonClickListeners() {
-		final Button editServerAddressButton = findViewById(R.id.edit_server_address_button);
-		final Button selectFileButton = findViewById(R.id.select_file_button);
+		editServerAddressButton = findViewById(R.id.edit_server_address_button);
+		selectFileButton = findViewById(R.id.select_file_button);
+		testConnectionButton = findViewById((R.id.test_connection));
 		final MainActivity mainActivity = this;
 
 		editServerAddressButton.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +160,12 @@ public class MainActivity extends AppCompatActivity {
 				startActivityForResult(intent, CHOOSE_FILE_REQUEST_CODE);
 			}
 		});
+		testConnectionButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				HttpService.testConnection();
+
+			}
+		});
 
 		toggleUploadServiceButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -170,13 +174,13 @@ public class MainActivity extends AppCompatActivity {
 				if (toggleUploadServiceButton.isChecked()) {
 					buttonsEnabled = false;
 					startFileTrackerService();
-				}
-				else {
+				} else {
 					stopFileTrackerService();
 				}
 				editServerAddressButton.setEnabled(buttonsEnabled);
 				selectFileButton.setEnabled(buttonsEnabled);
 				exitButton.setEnabled(buttonsEnabled);
+				testConnectionButton.setEnabled(buttonsEnabled);
 
 			}
 		});
@@ -203,8 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
 		Intent startIntent = new Intent(MainActivity.this, FileTrackerService.class);
 		startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
-		ResultReceiver fileTrackerResultReceiver = new FileTrackerResultReceiver(null);
-		startIntent.putExtra(Constants.EXTRAS_RESULT_RECEIVER_KEY, fileTrackerResultReceiver);
+		ResultReceiverService.setFileTrackerResultReceiver(new FileTrackerResultReceiver(null));
 		startService(startIntent);
 
 	}
@@ -215,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
 		stopIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
 		startService(stopIntent);
 	}
+
 	private class FileTrackerResultReceiver extends ResultReceiver {
 
 		public FileTrackerResultReceiver(Handler handler) {
@@ -222,9 +226,26 @@ public class MainActivity extends AppCompatActivity {
 		}
 
 		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
+		protected void onReceiveResult(int resultCode, final Bundle resultData) {
 			super.onReceiveResult(resultCode, resultData);
+			if (resultCode == Constants.DATA_TRAMSMISSION_RESULT_KEY) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						String resultMessage = resultData.getString(Constants.DATA_TRANSMISSION_RESULT_MESSAGE_KEY);
+						String dataSentTime = resultData.getString(Constants.DATA_TRANSMISSION_TIME_KEY);
+						Log.d(TAG, "Got response : " + resultMessage);
+						Log.d(TAG, "Time: " + dataSentTime);
+						infoViewGroup.setVisibility(View.VISIBLE);
 
+						if (dataSentTime != null && dataSentTime.length() > 0)
+							dataSentTimeTextView.setText(dataSentTime);
+						if (resultMessage != null && resultMessage.length() > 0)
+							statusTextView.setText(resultMessage);
+					}
+				});
+			}
 		}
 	}
 }
+
