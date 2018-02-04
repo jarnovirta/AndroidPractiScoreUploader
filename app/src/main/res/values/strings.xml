@@ -13,6 +13,7 @@
     <string name="test_connection_button">Test connection</string>
     <string name="last_transmission_time_label">Data sent:</string>
     <string name="last_transmission_status_label">Status:</string>
+    <string name="force_send_data_button">Force send</string>
     <!--Edit server address activity-->
     <string name="enter_url_label">Enter server address:</string>
     <string name="ok">Ok</string>

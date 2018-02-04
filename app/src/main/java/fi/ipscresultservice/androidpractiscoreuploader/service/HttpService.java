@@ -1,21 +1,17 @@
 package fi.ipscresultservice.androidpractiscoreuploader.service;
 
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import fi.ipscresultservice.androidpractiscoreuploader.Constants;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.Match;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.MatchScore;
@@ -31,80 +27,59 @@ public class HttpService {
 
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
-	public static int sendMatchDefinitionData(Match match) {
+	public static void sendMatchDefinitionData(Match match) {
 		try {
 			Log.d(TAG, "Sending match def");
 			String url = serverUrl + matchDefPath;
 			String json = objectMapper.writeValueAsString(match);
-			return sendPost(json, url, 20000);
+
+			HttpResponseHandler handler = new HttpResponseHandler() {
+				@Override
+				public void process(int responseCode) {
+					Log.d(TAG, "Match def data sent, response code: " + responseCode);
+				}
+			};
+			PostExecuteTask postExecute = new PostExecuteTask() {
+				@Override
+				public void execute(int resultCode) {
+					if (resultCode == 200) {
+						FileService.uploadMatchResultData();
+					}
+					else {
+						sendResultNotifications("Error (" + resultCode + ") sending data");
+					}
+				}
+			};
+			int timeout = 20000;
+			new SendPostAsyncTask(url, json, timeout, handler, postExecute).execute();
 
 		}
 		catch (Exception e) {
-			Log.e(TAG, e.getStackTrace().toString());
-			return -1;
+			Log.e(TAG, "Error sending match definition data", e);
 		}
 	}
 
-	public static int sendMatchResultData(MatchScore matchScore) {
+	public static void sendMatchResultData(MatchScore matchScore) {
 		try {
 			Log.d(TAG, "Reading match scores");
 			String url = serverUrl + matchResultsPath;
 			String json = objectMapper.writeValueAsString(matchScore);
-			return sendPost(json, url, 40000);
+
+			HttpResponseHandler handler = new HttpResponseHandler() {
+				@Override
+				public void process(int responseCode) {
+					Log.d(TAG, "Match result data sent, response code: " + responseCode);
+					if (responseCode == 200) sendResultNotifications("Result data successfully sent!");
+				}
+			};
+
+			int timeout = 40000;
+			new SendPostAsyncTask(url, json, timeout, handler, null).execute();
+
 		}
 		catch (Exception e) {
-			Log.e(TAG, e.getMessage());
-			return -1;
+			Log.e(TAG, "Error sending result data", e);
 		}
-	}
-
-
-	public static int sendPost(String json, String serverUrlString, int timeout) {
-		Log.d(TAG, "Sending POST request to url: " + serverUrlString);
-		int responseCode = -1;
-		try {
-			URL url = new URL(serverUrlString);
-
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(timeout);
-			conn.setConnectTimeout(timeout);
-
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-
-			conn.setDoInput(true);
-			conn.setDoOutput(true);
-			OutputStream os = conn.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(
-					new OutputStreamWriter(os, "UTF-8"));
-			writer.write(json);
-
-			writer.flush();
-			writer.close();
-
-			os.close();
-			responseCode = conn.getResponseCode();
-			Log.i(TAG, "Handing response");
-			if (responseCode == HttpsURLConnection.HTTP_OK) {
-				Log.i(TAG, "Response ok");
-				BufferedReader in = new BufferedReader(
-						new InputStreamReader(
-								conn.getInputStream()));
-				StringBuffer sb = new StringBuffer("");
-				String line = "";
-
-				while ((line = in.readLine()) != null) {
-					sb.append(line);
-					break;
-				}
-				in.close();
-			}
-
-		} catch (Exception e) {
-			Log.e(TAG, "Error sending data: " + e.getMessage());
-
-		}
-		return responseCode;
 	}
 
 	public static void testConnection() {
@@ -119,4 +94,24 @@ public class HttpService {
 	}
 
 	public static String getServerUrl() { return serverUrl; }
+
+	private static void sendResultNotifications(String info) {
+		sendResultNotifications(info, Constants.NOTIFICATION_TYPE.LOUD);
+	}
+
+	private static void sendResultNotifications(String info, Constants.NOTIFICATION_TYPE notificationType) {
+
+		ResultReceiver resultReceiver = ResultReceiverService.getFileTrackerResultReceiver();
+		Bundle bundle = new Bundle();
+		bundle.putString(Constants.DATA_TRANSMISSION_RESULT_MESSAGE_KEY, info);
+
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		String timeString = dateFormat.format(cal.getTime());
+		bundle.putString(Constants.RESULT_MESSAGE_TIMESTAMP_KEY, timeString);
+
+		resultReceiver.send(1, bundle);
+
+		NotificationService.sendServiceNotifications(info, notificationType);
+	}
 }

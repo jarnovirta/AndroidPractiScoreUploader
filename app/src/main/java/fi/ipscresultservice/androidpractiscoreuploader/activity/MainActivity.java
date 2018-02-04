@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 	private Button testConnectionButton;
 	private Button editServerAddressButton;
 	private Button selectFileButton;
+	private Button forceSendDataButton;
 
 	private boolean buttonsEnabled = true;
 
@@ -67,10 +67,11 @@ public class MainActivity extends AppCompatActivity {
 		infoViewGroup.setVisibility(View.INVISIBLE);
 
 		toggleUploadServiceButton = findViewById(R.id.toggle_upload_service_button);
-		exitButton = findViewById(R.id.exit_button);
+
 		setButtonClickListeners();
 		setButtonsEnabled();
 		loadAppData();
+		ResultReceiverService.setFileTrackerResultReceiver(new FileTrackerResultReceiver(null));
 	}
 
 	@Override
@@ -149,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
 		editServerAddressButton = findViewById(R.id.edit_server_address_button);
 		selectFileButton = findViewById(R.id.select_file_button);
 		testConnectionButton = findViewById((R.id.test_connection));
+		exitButton = findViewById(R.id.exit_button);
+		forceSendDataButton = findViewById(R.id.force_send_data_button);
+
 		final MainActivity mainActivity = this;
 
 		editServerAddressButton.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +189,13 @@ public class MainActivity extends AppCompatActivity {
 
 			}
 		});
+		forceSendDataButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				boolean forceSend = true;
+				FileService.checkPractiScoreExportFileModified(forceSend);
+			}
+		});
+
 		exitButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				mainActivity.finish();
@@ -209,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 	private void startFileTrackerService() {
 		Intent startIntent = new Intent(MainActivity.this, FileTrackerService.class);
 		startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
-		ResultReceiverService.setFileTrackerResultReceiver(new FileTrackerResultReceiver(null));
+
 		startService(startIntent);
 
 	}
@@ -234,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
 					@Override
 					public void run() {
 						String resultMessage = resultData.getString(Constants.DATA_TRANSMISSION_RESULT_MESSAGE_KEY);
-						String dataSentTime = resultData.getString(Constants.DATA_TRANSMISSION_TIME_KEY);
+						String dataSentTime = resultData.getString(Constants.RESULT_MESSAGE_TIMESTAMP_KEY);
 						infoViewGroup.setVisibility(View.VISIBLE);
 
 						if (dataSentTime != null && dataSentTime.length() > 0)
@@ -248,12 +259,14 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void setButtonsEnabled() {
-		boolean toggleUploadServiceButtonEnabled;
+		boolean sendDataToServerButtonsEnabled;
 		if (FileService.isPractiScoreExportFileUriSet() && HttpService.getServerUrl() != null) {
-			toggleUploadServiceButtonEnabled = true;
-
-		} else toggleUploadServiceButtonEnabled = false;
-		toggleUploadServiceButton.setEnabled(toggleUploadServiceButtonEnabled);
+			sendDataToServerButtonsEnabled = true;
+		} else {
+			sendDataToServerButtonsEnabled = false;
+		}
+		toggleUploadServiceButton.setEnabled(sendDataToServerButtonsEnabled);
+		forceSendDataButton.setEnabled(sendDataToServerButtonsEnabled);
 		exitButton.setEnabled(buttonsEnabled);
 		testConnectionButton.setEnabled(buttonsEnabled);
 		editServerAddressButton.setEnabled(buttonsEnabled);

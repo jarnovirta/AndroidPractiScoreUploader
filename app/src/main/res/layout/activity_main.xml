@@ -79,11 +79,26 @@
         android:background="@android:color/darker_gray"
         android:layout_below="@id/server_address_view_group"/>
 
+    <Button
+        android:id="@+id/force_send_data_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/after_server_separator"
+        android:layout_margin="10dp"
+        android:text="@string/force_send_data_button" />
+
+    <View
+        android:id="@+id/after_resend_data_button_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/force_send_data_button"/>
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/info_view_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/after_server_separator">
+        android:layout_below="@+id/after_resend_data_button_separator">
 
         <TextView
             android:id="@+id/info_label"

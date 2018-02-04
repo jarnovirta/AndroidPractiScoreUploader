@@ -1,17 +1,10 @@
 package fi.ipscresultservice.androidpractiscoreuploader.service;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.util.Log;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
@@ -29,57 +22,35 @@ public class FileService {
 
 	private static final String TAG = FileService.class.getSimpleName();
 
-	public static void checkPractiScoreExportFileModified() {
+	public static void checkPractiScoreExportFileModified(boolean forceSend) {
 		try {
-
 				File practiScoreExportFile = new File(practiScoreExportFilePath);
 				Long fileModifiedTime = practiScoreExportFile.lastModified();
-				Log.i(TAG, "\n**** PractiScore export file last modified: " + fileModifiedTime.toString());
-				if (lastModified != null && lastModified.equals(fileModifiedTime)) return;
-				Log.i(TAG, "File modified! Starting data upload...");
-
-
-				ResultReceiver resultReceiver = ResultReceiverService.getFileTrackerResultReceiver();
-				Bundle bundle = new Bundle();
-				bundle.putString(Constants.DATA_TRANSMISSION_RESULT_MESSAGE_KEY, "Sending data...");
-
-				DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-				Calendar cal = Calendar.getInstance();
-				String timeString = dateFormat.format(cal.getTime());
-				bundle.putString(Constants.DATA_TRANSMISSION_TIME_KEY, timeString);
-				resultReceiver.send(1, bundle);
-
-				// TODO: Only change lastModified when response with OK received from server!
+				if (!forceSend && lastModified != null && lastModified.equals(fileModifiedTime)) return;
 				lastModified = fileModifiedTime;
-				Match match = PractiScoreFileParser
-						.readMatchDefDataFromExportFile(practiScoreExportFile);
-				Log.i(TAG, "Calling sendMatchResultData");
-				int resultCode = HttpService.sendMatchDefinitionData(match);
-				if (resultCode != 200) sendResultInfo("Error code: " + resultCode);
-				MatchScore matchScore = PractiScoreFileParser
-						.readMatchResultDataFromExportFile((practiScoreExportFile));
-
-				Log.i(TAG, "Calling sendMatchResultData");
-				if (matchScore != null) {
-					resultCode = HttpService.sendMatchResultData(matchScore);
-
-					if (resultCode != 200) sendResultInfo("Error code: " + resultCode);
-					else sendResultInfo("Data successfully sent");
-				}
-				else sendResultInfo("Data successfully sent");
+				NotificationService.sendServiceNotifications("Sending data...", Constants.NOTIFICATION_TYPE.DISCREET);
+				uploadMatchDefinitionData();
 			} catch (Exception e) {
-				Log.e(TAG, e.getMessage());
-				sendResultInfo("Error");
+				Log.e(TAG, "Error sending result data", e);
+				NotificationService.sendServiceNotifications("Error while sending data");
 			}
 	}
-	private static void sendResultInfo(String info) {
 
-		ResultReceiver resultReceiver = ResultReceiverService.getFileTrackerResultReceiver();
-		Bundle bundle = new Bundle();
-		bundle.putString(Constants.DATA_TRANSMISSION_RESULT_MESSAGE_KEY, info);
-		resultReceiver.send(1, bundle);
+	public static void uploadMatchDefinitionData() {
+		File practiScoreExportFile = new File(practiScoreExportFilePath);
+		Match match = PractiScoreFileParser
+				.readMatchDefDataFromExportFile(practiScoreExportFile);
+		HttpService.sendMatchDefinitionData(match);
+
 	}
 
+	public static void uploadMatchResultData() {
+		File practiScoreExportFile = new File(practiScoreExportFilePath);
+		MatchScore matchScore = PractiScoreFileParser
+				.readMatchResultDataFromExportFile((practiScoreExportFile));
+		if (matchScore != null) HttpService.sendMatchResultData(matchScore);
+
+	}
 
 
 	public static void setPractiScoreExportFilePath(Uri uri) {
@@ -97,14 +68,14 @@ public class FileService {
 
 		}
 		catch (IOException e) {
-			Log.e("FileService", e.getMessage());
+			Log.e(TAG, "Error setting PractiScore export file path", e);
+			NotificationService.sendServiceNotifications("Error setting file path",
+					Constants.NOTIFICATION_TYPE.LOUD);
 		}
 	}
 	public static String getPractiScoreExportFileMatchname() {
 		return matchName;
 	}
-
-	public static String getPraciScoreExportFilePath() { return practiScoreExportFilePath; }
 
 	public static boolean isPractiScoreExportFileUriSet() {
 		return practiScoreExportFilePath != null;

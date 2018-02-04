@@ -52,28 +52,15 @@ public class FileTrackerService extends Service {
 				Log.i(TAG, "Received Start Foreground Intent ");
 
 				initChannels(UploaderAppContext.getAppContext());
-				NotificationCompat.Builder notificationBuilder =
-						new NotificationCompat.Builder(UploaderAppContext.getAppContext(), "default")
-								.setContentTitle("Test title").setContentText("Test body")
-								.setSmallIcon(R.mipmap.ic_launcher)
-								.setLargeIcon(BitmapFactory.decodeResource(UploaderAppContext
-												.getAppContext().getResources(),
-										R.mipmap.ic_launcher))
-//								.setSound(defaultSoundUri)
-//								.setContentIntent(pendingIntent)
-								.setOngoing(true);
-				Notification notification = notificationBuilder.build();
-				startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE,
-						notification);
 
-				// cancel if already existed
+				startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE,
+						NotificationService.getNotification("Result tracking started",
+								Constants.NOTIFICATION_TYPE.DISCREET));
 				if(checkFileTimer != null) {
 					checkFileTimer.cancel();
 				} else {
-					// recreate new
 					checkFileTimer = new Timer();
 				}
-				// schedule task
 				checkFileTimer.scheduleAtFixedRate(new FileModifiedTimerTask(), 0, Constants.CHECK_FILE_MODIFIED_INTERVAL);
 			}
 
@@ -98,7 +85,8 @@ public class FileTrackerService extends Service {
 		@Override
 		public void run() {
 			Log.d(TAG, "Timer task calling check file changed");
-			FileService.checkPractiScoreExportFileModified();
+			boolean forceSend = false;
+			FileService.checkPractiScoreExportFileModified(forceSend);
 		}
 	}
 
@@ -109,11 +97,10 @@ public class FileTrackerService extends Service {
 		}
 		NotificationManager notificationManager =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		NotificationChannel channel = new NotificationChannel("default",
+		NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
 				"PractiScore Uploader",
 				NotificationManager.IMPORTANCE_HIGH);
 		channel.setDescription("PractiScore Uploader Service Running");
 		notificationManager.createNotificationChannel(channel);
 	}
-
 }

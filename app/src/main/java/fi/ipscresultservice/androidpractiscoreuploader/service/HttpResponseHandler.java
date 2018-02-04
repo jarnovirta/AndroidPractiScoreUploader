@@ -5,5 +5,5 @@ package fi.ipscresultservice.androidpractiscoreuploader.service;
  */
 
 public interface HttpResponseHandler {
-	public void process(int responseCode);
+	void process(int responseCode);
 }

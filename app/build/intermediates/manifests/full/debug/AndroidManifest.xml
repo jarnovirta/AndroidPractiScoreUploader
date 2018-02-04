@@ -23,7 +23,9 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme" >
-        <activity android:name="fi.ipscresultservice.androidpractiscoreuploader.activity.MainActivity" >
+        <activity
+            android:name="fi.ipscresultservice.androidpractiscoreuploader.activity.MainActivity"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

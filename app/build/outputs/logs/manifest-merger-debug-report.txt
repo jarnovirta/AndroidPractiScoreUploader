@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\282d70614f3f2b50ef09a6d9b3178974\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\c88f37023314d666cc9f11f20c5c66c5\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\d0585dbc14444492f25d50a6c43f744e\AndroidManifest.xml:2:1-11:12
@@ -15,20 +15,20 @@ MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\Jarno\.gr
 MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\support-core-utils-26.1.0.aar\6c20bb9a0d3187e67c61dfd41c4a3b8b\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:support-compat:26.1.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\support-compat-26.1.0.aar\fe044acd86952284bfcd9ec0d2beaf26\AndroidManifest.xml:17:1-31:12
 MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\runtime-1.0.0.aar\fade3fa90e3e10a920d9b5a1b19013c4\AndroidManifest.xml:17:1-30:12
-INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
+INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
+INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
 	package
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:3:5-62
 		INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml
 		INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
 		INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml
 	android:versionCode
 		INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-29:12
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:1-31:12
 		INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:2:11-69
@@ -45,7 +45,7 @@ ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\Andr
 	android:name
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:6:22-77
 application
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:9:5-27:19
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:9:5-29:19
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\282d70614f3f2b50ef09a6d9b3178974\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\282d70614f3f2b50ef09a6d9b3178974\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\Jarno\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\c88f37023314d666cc9f11f20c5c66c5\AndroidManifest.xml:25:5-29:19
@@ -85,27 +85,29 @@ MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\Jarno\.gradle\caches
 	android:name
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:10:9-90
 activity#fi.ipscresultservice.androidpractiscoreuploader.activity.MainActivity
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:18:9-23:20
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:18:9-25:20
+	android:launchMode
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:19:13-43
 	android:name
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:18:19-56
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:19:13-22:29
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:20:13-23:29
 action#android.intent.action.MAIN
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:20:17-69
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:21:17-69
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:20:25-66
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:21:25-66
 category#android.intent.category.LAUNCHER
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:21:17-77
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:22:17-77
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:21:27-74
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:22:27-74
 activity#fi.ipscresultservice.androidpractiscoreuploader.activity.EnterServerAddressActivity
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:9-73
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:9-73
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:24:19-70
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:19-70
 service#fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:25:9-26:105
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:27:9-28:105
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:13-102
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:28:13-102
 uses-sdk
 INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml
