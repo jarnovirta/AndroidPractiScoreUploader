@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -19,6 +20,7 @@ import java.util.TimerTask;
 import javax.xml.transform.Result;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
+import fi.ipscresultservice.androidpractiscoreuploader.R;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
 
 
@@ -50,9 +52,17 @@ public class FileTrackerService extends Service {
 				Log.i(TAG, "Received Start Foreground Intent ");
 
 				initChannels(UploaderAppContext.getAppContext());
-				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(UploaderAppContext.getAppContext(), "default");
-				Notification notification = notificationBuilder
-						.setOngoing(true).build();
+				NotificationCompat.Builder notificationBuilder =
+						new NotificationCompat.Builder(UploaderAppContext.getAppContext(), "default")
+								.setContentTitle("Test title").setContentText("Test body")
+								.setSmallIcon(R.mipmap.ic_launcher)
+								.setLargeIcon(BitmapFactory.decodeResource(UploaderAppContext
+												.getAppContext().getResources(),
+										R.mipmap.ic_launcher))
+//								.setSound(defaultSoundUri)
+//								.setContentIntent(pendingIntent)
+								.setOngoing(true);
+				Notification notification = notificationBuilder.build();
 				startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE,
 						notification);
 

@@ -1,5 +1,8 @@
 package fi.ipscresultservice.androidpractiscoreuploader;
 
+import android.widget.Button;
+import android.widget.ToggleButton;
+
 /**
  * Created by Jarno on 26.1.2018.
  */
@@ -23,6 +26,13 @@ public class Constants {
 
 	public static final String APP_DATA_SERVER_ADDRESS = "APP_DATA_SERVER_ADDRESS";
 
+	public static final String MAIN_ACTIVITY_BUTTONS_STATE = "MAIN_ACTIVITY_BUTTONS_STATE";
+
+	public static final String INFO_VIEW_GROUP_VISIBILITY = "INFO_VIEW_GROUP_VISIBILITY";
+
+	public static final String DATA_SENT_TIME_TEXT_VIEW_STATE = "DATA_SENT_TIME_TEXT_VIEW_STATE";
+
+	public static final String STATUS_TEXT_VIEW_STATE = "STATUS_TEXT_VIEW_STATE";
 
 	public interface ACTION {
 		public static String MAIN_ACTION = "com.nkdroid.alertdialog.action.main";

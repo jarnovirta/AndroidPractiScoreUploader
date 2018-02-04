@@ -45,15 +45,11 @@ public class MainActivity extends AppCompatActivity {
 	private Button editServerAddressButton;
 	private Button selectFileButton;
 
+	private boolean buttonsEnabled = true;
+
 	private final int EDIT_SERVER_ADDRESS_REQUEST_CODE = 1;
 	private final int CHOOSE_FILE_REQUEST_CODE = 2;
 
-	private String lastDataUploadTime;
-
-	private enum UploaderStatus {OK, ERROR;}
-
-	private UploaderStatus status;
-	private String uploaderStatusMessage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +69,8 @@ public class MainActivity extends AppCompatActivity {
 		toggleUploadServiceButton = findViewById(R.id.toggle_upload_service_button);
 		exitButton = findViewById(R.id.exit_button);
 		setButtonClickListeners();
-		setToggleUploadServiceButtonEnabled();
+		setButtonsEnabled();
 		loadAppData();
-	}
-
-	private void setToggleUploadServiceButtonEnabled() {
-
-		if (FileService.isPractiScoreExportFileUriSet() && HttpService.getServerUrl() != null) {
-			toggleUploadServiceButton.setEnabled(true);
-		} else toggleUploadServiceButton.setEnabled(false);
 	}
 
 	@Override
@@ -98,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 				matchNameTextView.setText(FileService.getPractiScoreExportFileMatchname());
 			}
 		}
-		setToggleUploadServiceButtonEnabled();
+		setButtonsEnabled();
 	}
 
 	@Override
@@ -119,10 +108,25 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean(Constants.MAIN_ACTIVITY_BUTTONS_STATE, buttonsEnabled);
+		outState.putInt(Constants.INFO_VIEW_GROUP_VISIBILITY, infoViewGroup.getVisibility());
+		outState.putString(Constants.DATA_SENT_TIME_TEXT_VIEW_STATE, dataSentTimeTextView.getText().toString());
+		outState.putString(Constants.STATUS_TEXT_VIEW_STATE, statusTextView.getText().toString());
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
 		matchNameTextView.setText(FileService.getPractiScoreExportFileMatchname());
 		serverAddressTextView.setText(HttpService.getServerUrl());
+		buttonsEnabled = savedInstanceState.getBoolean(Constants.MAIN_ACTIVITY_BUTTONS_STATE);
+		setButtonsEnabled();
+		infoViewGroup.setVisibility(savedInstanceState.getInt(Constants.INFO_VIEW_GROUP_VISIBILITY));
+		dataSentTimeTextView.setText(savedInstanceState.getString(Constants.DATA_SENT_TIME_TEXT_VIEW_STATE));
+		statusTextView.setText(savedInstanceState.getString(Constants.STATUS_TEXT_VIEW_STATE));
+		super.onRestoreInstanceState(savedInstanceState);
+
 	}
 
 	private void saveServerAddress(String address) {
@@ -169,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
 		toggleUploadServiceButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				boolean buttonsEnabled = true;
+				buttonsEnabled = true;
 
 				if (toggleUploadServiceButton.isChecked()) {
 					buttonsEnabled = false;
@@ -177,10 +181,7 @@ public class MainActivity extends AppCompatActivity {
 				} else {
 					stopFileTrackerService();
 				}
-				editServerAddressButton.setEnabled(buttonsEnabled);
-				selectFileButton.setEnabled(buttonsEnabled);
-				exitButton.setEnabled(buttonsEnabled);
-				testConnectionButton.setEnabled(buttonsEnabled);
+				setButtonsEnabled();
 
 			}
 		});
@@ -193,18 +194,19 @@ public class MainActivity extends AppCompatActivity {
 
 	private void getPermissions() {
 		if (Build.VERSION.SDK_INT >= 23 &&
-				ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-				ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+				ContextCompat.checkSelfPermission(this,
+						Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+				ContextCompat.checkSelfPermission(this,
+						Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
 			ActivityCompat.requestPermissions(this,
-					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+							Manifest.permission.READ_EXTERNAL_STORAGE},
 					PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
 		}
 	}
 
 	private void startFileTrackerService() {
-		Log.d(TAG, "Starting file tracker service");
-
 		Intent startIntent = new Intent(MainActivity.this, FileTrackerService.class);
 		startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
 		ResultReceiverService.setFileTrackerResultReceiver(new FileTrackerResultReceiver(null));
@@ -213,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void stopFileTrackerService() {
-		Log.d(TAG, "Stopping file tracker service");
 		Intent stopIntent = new Intent(MainActivity.this, FileTrackerService.class);
 		stopIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
 		startService(stopIntent);
@@ -234,8 +235,6 @@ public class MainActivity extends AppCompatActivity {
 					public void run() {
 						String resultMessage = resultData.getString(Constants.DATA_TRANSMISSION_RESULT_MESSAGE_KEY);
 						String dataSentTime = resultData.getString(Constants.DATA_TRANSMISSION_TIME_KEY);
-						Log.d(TAG, "Got response : " + resultMessage);
-						Log.d(TAG, "Time: " + dataSentTime);
 						infoViewGroup.setVisibility(View.VISIBLE);
 
 						if (dataSentTime != null && dataSentTime.length() > 0)
@@ -246,6 +245,20 @@ public class MainActivity extends AppCompatActivity {
 				});
 			}
 		}
+	}
+
+	private void setButtonsEnabled() {
+		boolean toggleUploadServiceButtonEnabled;
+		if (FileService.isPractiScoreExportFileUriSet() && HttpService.getServerUrl() != null) {
+			toggleUploadServiceButtonEnabled = true;
+
+		} else toggleUploadServiceButtonEnabled = false;
+		toggleUploadServiceButton.setEnabled(toggleUploadServiceButtonEnabled);
+		exitButton.setEnabled(buttonsEnabled);
+		testConnectionButton.setEnabled(buttonsEnabled);
+		editServerAddressButton.setEnabled(buttonsEnabled);
+		selectFileButton.setEnabled(buttonsEnabled);
+
 	}
 }
 

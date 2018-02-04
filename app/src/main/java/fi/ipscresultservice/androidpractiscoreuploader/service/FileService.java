@@ -60,8 +60,12 @@ public class FileService {
 						.readMatchResultDataFromExportFile((practiScoreExportFile));
 
 				Log.i(TAG, "Calling sendMatchResultData");
-				resultCode = HttpService.sendMatchResultData(matchScore);
-				if (resultCode != 200) sendResultInfo("Error code: " + resultCode);
+				if (matchScore != null) {
+					resultCode = HttpService.sendMatchResultData(matchScore);
+
+					if (resultCode != 200) sendResultInfo("Error code: " + resultCode);
+					else sendResultInfo("Data successfully sent");
+				}
 				else sendResultInfo("Data successfully sent");
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage());
