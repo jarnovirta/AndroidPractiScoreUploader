@@ -23,7 +23,7 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".activity.EnterServerAddressActivity" />
+        <activity android:name=".activity.EditConnection" />
         <service
             android:name="fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService" />
     </application>

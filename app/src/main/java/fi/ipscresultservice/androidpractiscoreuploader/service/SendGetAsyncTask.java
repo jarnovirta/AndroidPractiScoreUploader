@@ -1,6 +1,7 @@
 package fi.ipscresultservice.androidpractiscoreuploader.service;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,6 +40,7 @@ public class SendGetAsyncTask extends AsyncTask<String, Void, Boolean> {
 
 				con.setRequestMethod("GET");
 				con.setConnectTimeout(timeout);
+				con.setRequestProperty("Authorization", HttpUtil.getBasicAuthHeader());
 				responseCode = con.getResponseCode();
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(con.getInputStream()));

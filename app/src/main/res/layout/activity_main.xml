@@ -40,6 +40,8 @@
         android:layout_margin="10dp"
         android:text="@string/server_address_label" />
 
+
+
     <TextView
         android:id="@+id/server_address"
         android:layout_width="wrap_content"
@@ -49,11 +51,45 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="20dp" />
 
+    <TextView
+        android:id="@+id/username_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/server_address"
+        android:layout_margin="10dp"
+        android:text="@string/username_label" />
+
+    <TextView
+        android:id="@+id/current_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username_label"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/password_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/current_username"
+        android:layout_margin="10dp"
+        android:text="@string/password_label" />
+
+    <TextView
+        android:id="@+id/current_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password_label"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20dp" />
+
     <RelativeLayout
         android:id="@+id/server_address_view_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/server_address">
+        android:layout_below="@+id/current_password">
         <Button
             android:id="@+id/edit_server_address_button"
             android:layout_width="wrap_content"

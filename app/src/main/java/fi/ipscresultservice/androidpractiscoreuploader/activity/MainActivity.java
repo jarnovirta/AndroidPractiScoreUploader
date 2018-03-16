@@ -26,6 +26,7 @@ import fi.ipscresultservice.androidpractiscoreuploader.service.FileService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.ResultReceiverService;
+import fi.ipscresultservice.androidpractiscoreuploader.service.UserService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 	private final String TAG = MainActivity.class.getSimpleName();
 
 	private TextView serverAddressTextView;
+	private TextView usernameTextView;
+	private TextView passwordTextView;
+
 	private TextView matchNameTextView;
 
 	private TextView dataSentTimeTextView;
@@ -41,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
 	private ToggleButton toggleUploadServiceButton;
 	private Button exitButton;
 	private Button testConnectionButton;
-	private Button editServerAddressButton;
+	private Button editConnectionButton;
 	private Button selectFileButton;
 	private Button forceSendDataButton;
 
 	private boolean buttonsEnabled = true;
 
-	private final int EDIT_SERVER_ADDRESS_REQUEST_CODE = 1;
+	private final int EDIT_CONNECTION_REQUEST_CODE = 1;
 	private final int CHOOSE_FILE_REQUEST_CODE = 2;
 
 
@@ -58,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 		getPermissions();
 
 		serverAddressTextView = findViewById(R.id.server_address);
+		usernameTextView = findViewById(R.id.current_username);
+		passwordTextView = findViewById(R.id.current_password);
+
 		matchNameTextView = findViewById(R.id.match_name);
 
 		dataSentTimeTextView = findViewById(R.id.last_transmission_time);
@@ -76,11 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == EDIT_SERVER_ADDRESS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+		if (requestCode == EDIT_CONNECTION_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 			String serverAddress = data.getStringExtra(Constants.EXTRAS_SERVER_ADDRESS);
 			HttpService.setServerUrl(serverAddress);
 			saveServerAddress(serverAddress);
 			serverAddressTextView.setText(data.getStringExtra(Constants.EXTRAS_SERVER_ADDRESS));
+			if (UserService.getUsername() != null) usernameTextView.setText(UserService.getUsername());
+			if (UserService.getPassword() != null) passwordTextView.setText(UserService.getPassword());
 		}
 		if (requestCode == CHOOSE_FILE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 			if (data.getData() != null) {
@@ -147,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void setButtonClickListeners() {
-		editServerAddressButton = findViewById(R.id.edit_server_address_button);
+		editConnectionButton = findViewById(R.id.edit_server_address_button);
 		selectFileButton = findViewById(R.id.select_file_button);
 		testConnectionButton = findViewById((R.id.test_connection));
 		exitButton = findViewById(R.id.exit_button);
@@ -155,10 +164,10 @@ public class MainActivity extends AppCompatActivity {
 
 		final MainActivity mainActivity = this;
 
-		editServerAddressButton.setOnClickListener(new View.OnClickListener() {
+		editConnectionButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(mainActivity, EnterServerAddressActivity.class);
-				startActivityForResult(i, EDIT_SERVER_ADDRESS_REQUEST_CODE);
+				Intent i = new Intent(mainActivity, EditConnection.class);
+				startActivityForResult(i, EDIT_CONNECTION_REQUEST_CODE);
 			}
 		});
 		selectFileButton.setOnClickListener(new View.OnClickListener() {
@@ -269,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
 		forceSendDataButton.setEnabled(sendDataToServerButtonsEnabled);
 		exitButton.setEnabled(buttonsEnabled);
 		testConnectionButton.setEnabled(buttonsEnabled);
-		editServerAddressButton.setEnabled(buttonsEnabled);
+		editConnectionButton.setEnabled(buttonsEnabled);
 		selectFileButton.setEnabled(buttonsEnabled);
 
 	}

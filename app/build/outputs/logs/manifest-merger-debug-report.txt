@@ -100,10 +100,10 @@ category#android.intent.category.LAUNCHER
 ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:22:17-77
 	android:name
 		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:22:27-74
-activity#fi.ipscresultservice.androidpractiscoreuploader.activity.EnterServerAddressActivity
-ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:9-73
+activity#fi.ipscresultservice.androidpractiscoreuploader.activity.EditConnection
+ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:9-61
 	android:name
-		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:19-70
+		ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:26:19-58
 service#fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService
 ADDED from E:\Ohjelmointi\Android\Android_PractiScore_uploader\app\src\main\AndroidManifest.xml:27:9-28:105
 	android:name

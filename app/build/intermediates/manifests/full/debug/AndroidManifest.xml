@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="fi.ipscresultservice.androidpractiscoreuploader.activity.EnterServerAddressActivity" />
+        <activity android:name="fi.ipscresultservice.androidpractiscoreuploader.activity.EditConnection" />
 
         <service android:name="fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService" />
 

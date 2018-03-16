@@ -57,7 +57,7 @@ public class SendPostAsyncTask extends AsyncTask<String, Void, Boolean> {
 
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-
+			conn.setRequestProperty("Authorization", HttpUtil.getBasicAuthHeader());
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
 			OutputStream os = conn.getOutputStream();

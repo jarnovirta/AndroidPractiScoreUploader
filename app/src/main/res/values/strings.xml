@@ -3,8 +3,10 @@
 
     <!--Main activity -->
     <string name="match_label">Match:</string>
-    <string name="edit_server_address_button">Edit Server Address</string>
+    <string name="edit_server_address_button">Edit Connection</string>
     <string name="server_address_label">Server:</string>
+    <string name="username_label">Username:</string>
+    <string name="password_label">Password:</string>
     <string name="select_file_button">Select PractiScore Export File</string>
     <string name="error_label">ERROR:</string>
     <string name="toggle_button_on_text">Tracking On</string>
@@ -13,9 +15,12 @@
     <string name="test_connection_button">Test connection</string>
     <string name="last_transmission_time_label">Data sent:</string>
     <string name="last_transmission_status_label">Status:</string>
-    <string name="force_send_data_button">Force send</string>
+    <string name="force_send_data_button">Force send all data</string>
+
     <!--Edit server address activity-->
-    <string name="enter_url_label">Enter server address:</string>
+    <string name="enter_url_label">Server address:</string>
+    <string name="enter_username_label">Username:</string>
+    <string name="enter_password_label">Password:</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="info_label">INFO:</string>

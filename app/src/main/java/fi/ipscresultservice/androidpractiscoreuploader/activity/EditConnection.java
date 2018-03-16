@@ -3,7 +3,7 @@ package fi.ipscresultservice.androidpractiscoreuploader.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -14,25 +14,33 @@ import fi.ipscresultservice.androidpractiscoreuploader.Constants;
 import fi.ipscresultservice.androidpractiscoreuploader.R;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
 import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
+import fi.ipscresultservice.androidpractiscoreuploader.service.UserService;
 
 /**
  * Created by Jarno on 26.1.2018.
  *
  */
 
-public class EnterServerAddressActivity extends AppCompatActivity {
+public class EditConnection extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_enter_server_address);
+		setContentView(R.layout.edit_connection);
 		Button okButton = findViewById(R.id.url_ok_button);
 		Button cancelButton = findViewById(R.id.url_cancel_button);
+		final EditText usernameEditText = findViewById(R.id.username_edit_text);
+		final EditText passwordEditText = findViewById(R.id.password_edit_text);
 		final EditText serverAddressEditText = findViewById(R.id.url_edit_text);
 		if (HttpService.getServerUrl() != null) serverAddressEditText.setText(HttpService.getServerUrl());
+		if (UserService.getUsername() != null) usernameEditText.setText(UserService.getUsername());
+		if (UserService.getPassword() != null) passwordEditText.setText(UserService.getPassword());
 
 		okButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				if (usernameEditText.getText() != null) UserService.setUsername(usernameEditText.getText().toString());
+				if (passwordEditText.getText() != null) UserService.setPassword(passwordEditText.getText().toString());
 				String url = serverAddressEditText.getText().toString();
+
 				if (!Patterns.WEB_URL.matcher(url).matches()) {
 					Toast.makeText(UploaderAppContext.getAppContext(), "Invalid address",
 							Toast.LENGTH_SHORT).show();
