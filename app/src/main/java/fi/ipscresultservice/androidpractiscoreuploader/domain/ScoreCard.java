@@ -25,6 +25,9 @@ public class ScoreCard {
 	@JsonProperty("popnpm")
 	private int popperNonPenaltyMisses;
 
+	@JsonProperty("popns")
+	private int popperNoshootHits;
+
 	@JsonProperty("rawpts")
 	private int points;
 
@@ -75,6 +78,13 @@ public class ScoreCard {
 
 	public void setPopperNonPenaltyMisses(int popperNonPenaltyMisses) {
 		this.popperNonPenaltyMisses = popperNonPenaltyMisses;
+	}
+	public int getPopperNoshootHits() {
+		return popperNoshootHits;
+	}
+
+	public void setPopperNoshootHits(int popperNoshootHits) {
+		this.popperNoshootHits = popperNoshootHits;
 	}
 
 	public int getPoints() {

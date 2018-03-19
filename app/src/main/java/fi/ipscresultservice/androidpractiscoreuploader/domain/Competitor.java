@@ -17,7 +17,7 @@ import java.util.Calendar;
 @SuppressWarnings("unused")
 public class Competitor {
 
-	@JsonProperty("sh_uuid")
+	@JsonProperty("sh_uid")
 	private String uuid;
 
 	@JsonProperty("sh_num")

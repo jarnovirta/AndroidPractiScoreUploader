@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
 	private final String TAG = MainActivity.class.getSimpleName();
 
+	private Intent trackerServiceIntent;
 	private TextView serverAddressTextView;
 	private TextView usernameTextView;
 	private TextView passwordTextView;
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
 		exitButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				stopService(trackerServiceIntent);
 				mainActivity.finish();
 			}
 		});
@@ -227,10 +229,10 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void startFileTrackerService() {
-		Intent startIntent = new Intent(MainActivity.this, FileTrackerService.class);
-		startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+		trackerServiceIntent = new Intent(MainActivity.this, FileTrackerService.class);
+		trackerServiceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
 
-		startService(startIntent);
+		startService(trackerServiceIntent);
 
 	}
 

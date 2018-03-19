@@ -49,7 +49,7 @@ public class FileService {
 		MatchScore matchScore = PractiScoreFileParser
 				.readMatchResultDataFromExportFile((practiScoreExportFile));
 		if (matchScore != null) HttpService.sendMatchResultData(matchScore);
-
+		else HttpService.sendResultNotifications("Result data successfully sent!", Constants.NOTIFICATION_TYPE.LOUD);
 	}
 
 

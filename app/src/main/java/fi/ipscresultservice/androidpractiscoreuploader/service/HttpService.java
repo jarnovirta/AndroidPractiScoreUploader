@@ -99,7 +99,7 @@ public class HttpService {
 		sendResultNotifications(info, Constants.NOTIFICATION_TYPE.LOUD);
 	}
 
-	private static void sendResultNotifications(String info, Constants.NOTIFICATION_TYPE notificationType) {
+	public static void sendResultNotifications(String info, Constants.NOTIFICATION_TYPE notificationType) {
 
 		ResultReceiver resultReceiver = ResultReceiverService.getFileTrackerResultReceiver();
 		Bundle bundle = new Bundle();
