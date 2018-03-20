@@ -25,6 +25,7 @@ import fi.ipscresultservice.androidpractiscoreuploader.R;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService;
+import fi.ipscresultservice.androidpractiscoreuploader.service.NotificationService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.ResultReceiverService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.UserService;
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 	private Button testConnectionButton;
 	private Button editConnectionButton;
 	private Button selectFileButton;
-	private Button forceSendDataButton;
+	private Button sendDataButton;
 
 	private boolean buttonsEnabled = true;
 
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 		selectFileButton = findViewById(R.id.select_file_button);
 		testConnectionButton = findViewById((R.id.test_connection));
 		exitButton = findViewById(R.id.exit_button);
-		forceSendDataButton = findViewById(R.id.force_send_data_button);
+		sendDataButton = findViewById(R.id.send_data_button);
 
 		final MainActivity mainActivity = this;
 
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
 			}
 		});
-		forceSendDataButton.setOnClickListener(new View.OnClickListener() {
+		sendDataButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				boolean forceSend = true;
 				FileService.checkPractiScoreExportFileModified(forceSend);
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
 		exitButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				stopService(trackerServiceIntent);
+				NotificationService.clearNotification();
 				mainActivity.finish();
 			}
 		});
@@ -277,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
 			sendDataToServerButtonsEnabled = false;
 		}
 		toggleUploadServiceButton.setEnabled(sendDataToServerButtonsEnabled);
-		forceSendDataButton.setEnabled(sendDataToServerButtonsEnabled);
+		sendDataButton.setEnabled(sendDataToServerButtonsEnabled == true && buttonsEnabled == true);
 		exitButton.setEnabled(buttonsEnabled);
 		testConnectionButton.setEnabled(buttonsEnabled);
 		editConnectionButton.setEnabled(buttonsEnabled);

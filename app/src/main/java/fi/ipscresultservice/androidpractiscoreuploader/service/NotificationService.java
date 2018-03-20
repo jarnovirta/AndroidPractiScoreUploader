@@ -53,7 +53,7 @@ public class NotificationService {
 			int smallIconViewId = UploaderAppContext.getAppContext().getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
 
 			if (smallIconViewId != 0) {
-				if (notification.contentIntent != null)
+				if (notification.contentView != null)
 					notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
 
 				if (notification.headsUpContentView != null)
@@ -74,7 +74,6 @@ public class NotificationService {
 				notify(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, getNotification(notificationText, notificationType));
 	}
 
-
 	public static void sendServiceNotifications(String info) {
 		sendServiceNotifications(info, Constants.NOTIFICATION_TYPE.LOUD);
 	}
@@ -94,5 +93,11 @@ public class NotificationService {
 
 		NotificationService.postNotification(info, notificationType);
 	}
-
+	public static void clearNotification() {
+		NotificationManager notificationManager =
+				(NotificationManager) UploaderAppContext.getAppContext()
+						.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.
+				cancel(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE);
+	}
 }
