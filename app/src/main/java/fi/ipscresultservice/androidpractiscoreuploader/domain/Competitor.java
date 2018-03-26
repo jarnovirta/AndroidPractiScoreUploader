@@ -60,6 +60,9 @@ public class Competitor {
 	@JsonProperty("sh_sqd")
 	private int squad;
 
+	@JsonProperty("sh_del")
+	private boolean deleted;
+
 	public String getUuid() {
 		return uuid;
 	}
@@ -170,5 +173,13 @@ public class Competitor {
 
 	public void setPractiScoreCategoryString(String practiScoreCategoryString) {
 		this.practiScoreCategoryString = practiScoreCategoryString;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 }

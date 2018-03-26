@@ -31,6 +31,9 @@ public class Stage {
 	@JsonProperty("stage_poppers")
 	private int poppers;
 
+	@JsonProperty("stage_deleted")
+	private boolean deleted = false;
+
 	public String getUuid() {
 		return uuid;
 	}
@@ -85,5 +88,13 @@ public class Stage {
 
 	public void setPoppers(int poppers) {
 		this.poppers = poppers;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 }

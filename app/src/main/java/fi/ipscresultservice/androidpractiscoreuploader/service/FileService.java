@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
+import fi.ipscresultservice.androidpractiscoreuploader.domain.Competitor;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.Match;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.MatchScore;
 import fi.ipscresultservice.androidpractiscoreuploader.practiscorefileparser.PractiScoreFileParser;
@@ -40,6 +41,7 @@ public class FileService {
 		File practiScoreExportFile = new File(practiScoreExportFilePath);
 		Match match = PractiScoreFileParser
 				.readMatchDefDataFromExportFile(practiScoreExportFile);
+
 		HttpService.sendMatchDefinitionData(match);
 
 	}
