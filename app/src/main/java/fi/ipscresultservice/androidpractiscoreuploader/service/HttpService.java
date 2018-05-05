@@ -50,7 +50,7 @@ public class HttpService {
 					}
 				}
 			};
-			int timeout = 20000;
+			int timeout = 60000;
 			new SendPostAsyncTask(url, json, timeout, handler, postExecute).execute();
 
 		}
@@ -73,7 +73,7 @@ public class HttpService {
 				}
 			};
 
-			int timeout = 40000;
+			int timeout = 90000;
 			new SendPostAsyncTask(url, json, timeout, handler, null).execute();
 
 		}
