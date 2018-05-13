@@ -18,6 +18,9 @@ public class Stage {
 	@JsonProperty("stage_name")
 	private String name;
 
+	@JsonProperty("stage_scoretype")
+	private String scoreType;
+
 	@JsonProperty("stage_number")
 	private int stageNumber;
 
@@ -96,5 +99,12 @@ public class Stage {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getScoreType() {
+		return scoreType;
+	}
+	public void setScoreType(String scoreType) {
+		this.scoreType = scoreType;
 	}
 }
