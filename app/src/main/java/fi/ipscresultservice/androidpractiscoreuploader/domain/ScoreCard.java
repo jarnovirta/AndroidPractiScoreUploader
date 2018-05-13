@@ -40,6 +40,9 @@ public class ScoreCard {
 	@JsonProperty("proc")
 	private int proceduralPenalties;
 
+	@JsonProperty("apen")
+	private int additionalPenalties;
+
 	public String getShooterId() {
 		return shooterId;
 	}

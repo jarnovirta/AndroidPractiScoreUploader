@@ -22,7 +22,7 @@ public class HttpService {
 
 	private static String serverUrl;
 	private static final String matchDefPath =  "/api/matches";
-	private static final String matchResultsPath =  "/api/matches/matchId/scores";
+	private static final String matchResultsPath =  "/api/scores";
 	private static final String testConnectionPath = "/api/testConnection";
 
 	private static ObjectMapper objectMapper = new ObjectMapper();
@@ -61,8 +61,9 @@ public class HttpService {
 
 	public static void sendMatchResultData(MatchScore matchScore) {
 		try {
-			Log.d(TAG, "Reading match scores");
+
 			String url = serverUrl + matchResultsPath;
+			Log.d(TAG, "Reading match scores to " + url);
 			String json = objectMapper.writeValueAsString(matchScore);
 
 			HttpResponseHandler handler = new HttpResponseHandler() {
