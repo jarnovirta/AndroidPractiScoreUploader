@@ -43,6 +43,15 @@ public class FileService {
 
 	public static void setPractiScoreExportFilePath(Uri uri) {
 		practiScoreExportFilePath = FileUtil.getPath(UploaderAppContext.getAppContext(), uri);
+		readMatchNameFromFile();
+	}
+
+	public static void setPractiScoreExportFilePath(String path) {
+		practiScoreExportFilePath = path;
+		readMatchNameFromFile();
+	}
+
+	private static void readMatchNameFromFile() {
 		try {
 			if (practiScoreExportFilePath == null) return;
 
@@ -54,7 +63,6 @@ public class FileService {
 				});
 				matchName = match.getName();
 			}
-
 		}
 		catch (IOException e) {
 			Log.e(TAG, "Error setting PractiScore export file path", e);
@@ -62,6 +70,8 @@ public class FileService {
 					Constants.NOTIFICATION_TYPE.LOUD);
 		}
 	}
+	public static String getPractiScoreExportFilePath() { return practiScoreExportFilePath; }
+
 	public static String getPractiScoreExportFileMatchname() {
 		return matchName;
 	}

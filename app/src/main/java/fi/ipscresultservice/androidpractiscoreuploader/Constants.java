@@ -17,6 +17,12 @@ public class Constants {
 
 	public static final String EXTRAS_SERVER_ADDRESS = "SERVER_ADDRESS";
 
+	public static final String EXTRAS_USERNAME = "USERNAME";
+
+	public static final String EXTRAS_PASSWORD = "PASSWORD";
+
+	public static final String PRACTISCORE_FILE_PATH = "PRACTISCORE_FILE_PATH";
+
 	public static final String EXTRAS_RESULT_RECEIVER_KEY = "EXTRAS_RESULT_RECEIVER_KEY";
 
 	public static final int DATA_TRAMSMISSION_RESULT_KEY = 1;

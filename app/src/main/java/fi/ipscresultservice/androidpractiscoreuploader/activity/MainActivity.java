@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -22,16 +23,17 @@ import android.widget.ToggleButton;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
 import fi.ipscresultservice.androidpractiscoreuploader.R;
+import fi.ipscresultservice.androidpractiscoreuploader.service.AppDataService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileService;
+import fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerResultReceiver;
 import fi.ipscresultservice.androidpractiscoreuploader.service.HttpService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.FileTrackerService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.NotificationService;
+import fi.ipscresultservice.androidpractiscoreuploader.service.PermissionsService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.ResultReceiverService;
 import fi.ipscresultservice.androidpractiscoreuploader.service.UserService;
 
 public class MainActivity extends AppCompatActivity {
-
-	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
 	private final String TAG = MainActivity.class.getSimpleName();
 
 	private Intent trackerServiceIntent;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		getPermissions();
+		PermissionsService.getPermissions(this);
 
 		serverAddressTextView = findViewById(R.id.server_address);
 		usernameTextView = findViewById(R.id.current_username);
@@ -78,17 +80,23 @@ public class MainActivity extends AppCompatActivity {
 		toggleUploadServiceButton = findViewById(R.id.toggle_upload_service_button);
 
 		setButtonClickListeners();
+
+		AppDataService.loadAppData(this);
+		setMatchAndConnectionTextViews();
+
+		ResultReceiverService.setFileTrackerResultReceiver(new FileTrackerResultReceiver(null, this));
+
 		setButtonsEnabled();
-		loadAppData();
-		ResultReceiverService.setFileTrackerResultReceiver(new FileTrackerResultReceiver(null));
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == EDIT_CONNECTION_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 			String serverAddress = data.getStringExtra(Constants.EXTRAS_SERVER_ADDRESS);
+
 			HttpService.setServerUrl(serverAddress);
-			saveServerAddress(serverAddress);
+
+			AppDataService.saveAppData(this);
 			serverAddressTextView.setText(data.getStringExtra(Constants.EXTRAS_SERVER_ADDRESS));
 			if (UserService.getUsername() != null) usernameTextView.setText(UserService.getUsername());
 			if (UserService.getPassword() != null) passwordTextView.setText(UserService.getPassword());
@@ -96,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
 		if (requestCode == CHOOSE_FILE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 			if (data.getData() != null) {
 				FileService.setPractiScoreExportFilePath(data.getData());
-				matchNameTextView.setText(FileService.getPractiScoreExportFileMatchname());
+				AppDataService.saveAppData(this);
+				setMatchAndConnectionTextViews();
 			}
 		}
 		setButtonsEnabled();
@@ -106,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 	public void onRequestPermissionsResult(int requestCode,
 	                                       @NonNull String permissions[], @NonNull int[] grantResults) {
 		switch (requestCode) {
-			case PERMISSIONS_REQUEST_READ_AND_WRITE_SDK: {
+			case PermissionsService.PERMISSIONS_REQUEST_READ_AND_WRITE_SDK: {
 				// If request is cancelled, the result arrays are empty.
 				if (grantResults.length > 0
 						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -141,20 +150,28 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-	private void saveServerAddress(String address) {
-		SharedPreferences sharedPref = getSharedPreferences("PSUploaderData", Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.putString(Constants.APP_DATA_SERVER_ADDRESS, address);
-		editor.commit();
+	public void setMatchAndConnectionTextViews() {
+		if (HttpService.getServerUrl() != null) serverAddressTextView.setText(HttpService.getServerUrl());
+		else serverAddressTextView.setText("");
+		if (UserService.getUsername() != null) usernameTextView.setText(UserService.getUsername());
+		else usernameTextView.setText("");
+		if (UserService.getPassword() != null) passwordTextView.setText(UserService.getPassword());
+		else passwordTextView.setText("");
+		if (FileService.getPractiScoreExportFileMatchname() != null) {
+			matchNameTextView.setText(FileService.getPractiScoreExportFileMatchname());
+		}
+		else matchNameTextView.setText("");
 	}
 
-	private void loadAppData() {
-		SharedPreferences sharedPref = getSharedPreferences("PSUploaderData", Context.MODE_PRIVATE);
-		String address = sharedPref.getString(Constants.APP_DATA_SERVER_ADDRESS, null);
-		if (address != null) {
-			HttpService.setServerUrl(address);
-			serverAddressTextView.setText(address);
-		}
+	public void setDataSentTimeTextViewText(String dataSentTime) {
+		dataSentTimeTextView.setText(dataSentTime);
+	}
+	public void setStatusTextView(String statusText) {
+		statusTextView.setText(statusText);
+	}
+
+	public void setInfoViewGroupVisibility(int visible) {
+		infoViewGroup.setVisibility(visible);
 	}
 
 	private void setButtonClickListeners() {
@@ -215,19 +232,6 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
-	private void getPermissions() {
-		if (Build.VERSION.SDK_INT >= 23 &&
-				ContextCompat.checkSelfPermission(this,
-						Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-				ContextCompat.checkSelfPermission(this,
-						Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-			ActivityCompat.requestPermissions(this,
-					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-							Manifest.permission.READ_EXTERNAL_STORAGE},
-					PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
-		}
-	}
 
 	private void startFileTrackerService() {
 		trackerServiceIntent = new Intent(MainActivity.this, FileTrackerService.class);
@@ -241,33 +245,6 @@ public class MainActivity extends AppCompatActivity {
 		Intent stopIntent = new Intent(MainActivity.this, FileTrackerService.class);
 		stopIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
 		startService(stopIntent);
-	}
-
-	private class FileTrackerResultReceiver extends ResultReceiver {
-
-		public FileTrackerResultReceiver(Handler handler) {
-			super(handler);
-		}
-
-		@Override
-		protected void onReceiveResult(int resultCode, final Bundle resultData) {
-			super.onReceiveResult(resultCode, resultData);
-			if (resultCode == Constants.DATA_TRAMSMISSION_RESULT_KEY) {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						String resultMessage = resultData.getString(Constants.DATA_TRANSMISSION_RESULT_MESSAGE_KEY);
-						String dataSentTime = resultData.getString(Constants.RESULT_MESSAGE_TIMESTAMP_KEY);
-						infoViewGroup.setVisibility(View.VISIBLE);
-
-						if (dataSentTime != null && dataSentTime.length() > 0)
-							dataSentTimeTextView.setText(dataSentTime);
-						if (resultMessage != null && resultMessage.length() > 0)
-							statusTextView.setText(resultMessage);
-					}
-				});
-			}
-		}
 	}
 
 	private void setButtonsEnabled() {
@@ -285,5 +262,6 @@ public class MainActivity extends AppCompatActivity {
 		selectFileButton.setEnabled(buttonsEnabled);
 
 	}
+
 }
 

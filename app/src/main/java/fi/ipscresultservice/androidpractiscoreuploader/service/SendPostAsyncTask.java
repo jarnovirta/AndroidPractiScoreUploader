@@ -14,6 +14,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import fi.ipscresultservice.androidpractiscoreuploader.Constants;
+
 /**
  *
  * Created by Jarno on 4.2.2018.
@@ -29,7 +31,6 @@ public class SendPostAsyncTask extends AsyncTask<String, Void, Boolean> {
 	private int timeout;
 	private int responseCode = -1;
 	private String responseMessage;
-
 
 	public SendPostAsyncTask(String urlString, String json, int timeout, HttpResponseHandler handler,
 	                         PostExecuteTask postExecuteTask) {
@@ -49,7 +50,6 @@ public class SendPostAsyncTask extends AsyncTask<String, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(String... params) {
-		Log.d(TAG, "Sending POST request to url: " + urlString);
 		try {
 			URL url = new URL(urlString);
 
@@ -90,6 +90,7 @@ public class SendPostAsyncTask extends AsyncTask<String, Void, Boolean> {
 
 		} catch (Exception e) {
 			Log.e(TAG, "Error sending data: ", e);
+			HttpService.sendResultNotifications("Software error sending data: " + e, Constants.NOTIFICATION_TYPE.LOUD);
 
 		}
 		handler.process(responseCode, responseMessage);
