@@ -5,5 +5,5 @@ package fi.ipscresultservice.androidpractiscoreuploader.service;
  */
 
 public interface PostExecuteTask {
-	void execute(int resultCode);
+	void execute(int resultCode, String responseMessage);
 }

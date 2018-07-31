@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -27,6 +28,7 @@ public class SendPostAsyncTask extends AsyncTask<String, Void, Boolean> {
 	private String json;
 	private int timeout;
 	private int responseCode = -1;
+	private String responseMessage;
 
 
 	public SendPostAsyncTask(String urlString, String json, int timeout, HttpResponseHandler handler,
@@ -70,33 +72,33 @@ public class SendPostAsyncTask extends AsyncTask<String, Void, Boolean> {
 
 			os.close();
 			responseCode = conn.getResponseCode();
-			Log.i(TAG, "Handing response");
-			if (responseCode == HttpsURLConnection.HTTP_OK) {
-				Log.i(TAG, "Response ok");
-				BufferedReader in = new BufferedReader(
-						new InputStreamReader(
-								conn.getInputStream()));
-				StringBuffer sb = new StringBuffer("");
-				String line = "";
+			InputStream is;
+			if (responseCode < HttpURLConnection.HTTP_BAD_REQUEST) is = conn.getInputStream();
+			else is = conn.getErrorStream();
 
-				while ((line = in.readLine()) != null) {
-					sb.append(line);
-					break;
-				}
-				in.close();
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(is));
+			StringBuffer sb = new StringBuffer("");
+			String line = "";
+
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+				break;
 			}
+			br.close();
+			responseMessage = sb.toString();
 
 		} catch (Exception e) {
 			Log.e(TAG, "Error sending data: ", e);
 
 		}
-		handler.process(responseCode);
+		handler.process(responseCode, responseMessage);
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(Boolean aBoolean) {
 		super.onPostExecute(aBoolean);
-		if (postExecuteTask != null) postExecuteTask.execute(responseCode);
+		if (postExecuteTask != null) postExecuteTask.execute(responseCode, responseMessage);
 	}
 }

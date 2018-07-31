@@ -21,65 +21,47 @@ public class HttpService {
 	private static final String TAG = HttpService.class.getSimpleName();
 
 	private static String serverUrl;
-	private static final String matchDefPath =  "/api/matches";
-	private static final String matchResultsPath =  "/api/scores";
+	private static final String matchUploadPath =  "/api/matches";
 	private static final String testConnectionPath = "/api/testConnection";
 
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
-	public static void sendMatchDefinitionData(Match match) {
+	public static void sendMatchData(Match match, MatchScore matchScore) {
 		try {
-			Log.d(TAG, "Sending match def");
-			String url = serverUrl + matchDefPath;
-			String json = objectMapper.writeValueAsString(match);
+			String url = serverUrl + matchUploadPath;
+			String matchJson = objectMapper.writeValueAsString(match);
+			String scoresJson = objectMapper.writeValueAsString(matchScore);
+			String json = "{\"match\": " + matchJson + ",";
+			json += "\"matchScore\": " + scoresJson + "}";
+
+			Log.d(TAG, "Sending match data json: " + json);
 
 			HttpResponseHandler handler = new HttpResponseHandler() {
 				@Override
-				public void process(int responseCode) {
+				public void process(int responseCode, String responseMessage) {
 					Log.d(TAG, "Match def data sent, response code: " + responseCode);
 				}
 			};
 			PostExecuteTask postExecute = new PostExecuteTask() {
 				@Override
-				public void execute(int resultCode) {
-					if (resultCode == 200) {
-						FileService.uploadMatchResultData();
-					}
-					else {
-						sendResultNotifications("Error (" + resultCode + ") sending data");
-					}
+				public void execute(int resultCode, String responseMessage) {
+				String notification;
+				if (resultCode == 200) notification = "Result data successfully sent!";
+				else {
+					notification = "Error";
+					if (resultCode != -1) notification += " (" + resultCode + ")";
+					if (responseMessage != null) notification += ": " + responseMessage;
+					notification += "!";
+				}
+				sendResultNotifications(notification, Constants.NOTIFICATION_TYPE.LOUD);
 				}
 			};
-			int timeout = 60000;
+			int timeout = 50000;
 			new SendPostAsyncTask(url, json, timeout, handler, postExecute).execute();
-
 		}
 		catch (Exception e) {
-			Log.e(TAG, "Error sending match definition data", e);
-		}
-	}
-
-	public static void sendMatchResultData(MatchScore matchScore) {
-		try {
-
-			String url = serverUrl + matchResultsPath;
-			Log.d(TAG, "Reading match scores to " + url);
-			String json = objectMapper.writeValueAsString(matchScore);
-
-			HttpResponseHandler handler = new HttpResponseHandler() {
-				@Override
-				public void process(int responseCode) {
-					Log.d(TAG, "Match result data sent, response code: " + responseCode);
-					if (responseCode == 200) sendResultNotifications("Result data successfully sent!");
-				}
-			};
-
-			int timeout = 90000;
-			new SendPostAsyncTask(url, json, timeout, handler, null).execute();
-
-		}
-		catch (Exception e) {
-			Log.e(TAG, "Error sending result data", e);
+			Log.e(TAG, "Software error sending data", e);
+			sendResultNotifications("Software error: " + e.getMessage());
 		}
 	}
 

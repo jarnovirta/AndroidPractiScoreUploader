@@ -19,6 +19,7 @@ public class SendGetAsyncTask extends AsyncTask<String, Void, Boolean> {
 	private String url;
 	private int timeout;
 	private int responseCode;
+	private String responseMessage;
 
 	public SendGetAsyncTask(String url, int timeout, HttpResponseHandler handler) {
 		super();
@@ -42,6 +43,7 @@ public class SendGetAsyncTask extends AsyncTask<String, Void, Boolean> {
 				con.setConnectTimeout(timeout);
 				con.setRequestProperty("Authorization", HttpUtil.getBasicAuthHeader());
 				responseCode = con.getResponseCode();
+				responseMessage = con.getResponseMessage();
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(con.getInputStream()));
 				String inputLine;
@@ -60,7 +62,7 @@ public class SendGetAsyncTask extends AsyncTask<String, Void, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean aBoolean) {
 		super.onPostExecute(aBoolean);
-		handler.process(responseCode);
+		handler.process(responseCode, responseMessage);
 	}
 
 }

@@ -29,8 +29,8 @@ public class Competitor {
 	@JsonProperty("sh_ln")
 	private String lastName;
 
-	@JsonProperty("sh_id")
-	private int ipscAlias;
+	/* @JsonProperty("sh_id")
+	private int ipscAlias; */
 
 	@JsonProperty("sh_dvp")
 	private String division;
@@ -159,13 +159,13 @@ public class Competitor {
 		this.squad = squad;
 	}
 
-	public int getIpscAlias() {
+	/* public int getIpscAlias() {
 		return ipscAlias;
 	}
 
 	public void setIpscAlias(int ipscAlias) {
 		this.ipscAlias = ipscAlias;
-	}
+	} */
 
 	public String getPractiScoreCategoryString() {
 		return practiScoreCategoryString;

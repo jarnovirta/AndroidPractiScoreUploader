@@ -11,14 +11,16 @@ import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
  */
 
 public class TestConnectionResponseHandler implements HttpResponseHandler {
-	public void process(int responseCode) {
+	public void process(int responseCode, String responseMessage) {
 
 		if (responseCode == 200) {
 			Toast.makeText(UploaderAppContext.getAppContext(), "Connection ok!", Toast.LENGTH_SHORT).show();
 		}
 		else {
-			String errorString = "Connection failed!";
-			if (responseCode != 0) errorString += " code: " + responseCode;
+			String errorString = "Connection failed";
+			if (responseCode != 0) errorString += " (code: " + responseCode + ")";
+			if (responseMessage != null) errorString += " " + responseMessage;
+			errorString += "!";
 			Toast.makeText(UploaderAppContext.getAppContext(), errorString, Toast.LENGTH_SHORT).show();
 		}
 	}

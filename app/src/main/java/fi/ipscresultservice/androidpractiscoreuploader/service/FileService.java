@@ -30,36 +30,23 @@ public class FileService {
 				if (!forceSend && lastModified != null && lastModified.equals(fileModifiedTime)) return;
 				lastModified = fileModifiedTime;
 				NotificationService.sendServiceNotifications("Sending data...", Constants.NOTIFICATION_TYPE.DISCREET);
-				uploadMatchDefinitionData();
+				Match match = PractiScoreFileParser
+						.readMatchDefDataFromExportFile(practiScoreExportFile);
+				MatchScore matchScore = PractiScoreFileParser
+					.readMatchResultDataFromExportFile((practiScoreExportFile));
+				HttpService.sendMatchData(match, matchScore);
 			} catch (Exception e) {
 				Log.e(TAG, "Error sending result data", e);
 				NotificationService.sendServiceNotifications("Error while sending data");
 			}
 	}
 
-	public static void uploadMatchDefinitionData() {
-		File practiScoreExportFile = new File(practiScoreExportFilePath);
-		Match match = PractiScoreFileParser
-				.readMatchDefDataFromExportFile(practiScoreExportFile);
-
-		HttpService.sendMatchDefinitionData(match);
-
-	}
-
-	public static void uploadMatchResultData() {
-		File practiScoreExportFile = new File(practiScoreExportFilePath);
-		MatchScore matchScore = PractiScoreFileParser
-				.readMatchResultDataFromExportFile((practiScoreExportFile));
-		if (matchScore != null) HttpService.sendMatchResultData(matchScore);
-		else HttpService.sendResultNotifications("Result data successfully sent!", Constants.NOTIFICATION_TYPE.LOUD);
-	}
-
-
 	public static void setPractiScoreExportFilePath(Uri uri) {
 		practiScoreExportFilePath = FileUtil.getPath(UploaderAppContext.getAppContext(), uri);
-
-		File file = new File(practiScoreExportFilePath);
 		try {
+			if (practiScoreExportFilePath == null) return;
+
+			File file = new File(practiScoreExportFilePath);
 			ObjectMapper objectMapper = new ObjectMapper();
 			String jsonString = PractiScoreFileParser.readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_DEF);
 			if (jsonString != null) {
