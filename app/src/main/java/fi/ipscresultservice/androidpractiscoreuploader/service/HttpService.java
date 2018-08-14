@@ -24,15 +24,9 @@ public class HttpService {
 	private static final String matchUploadPath =  "/api/matches";
 	private static final String testConnectionPath = "/api/testConnection";
 
-	private static ObjectMapper objectMapper = new ObjectMapper();
-
-	public static void sendMatchData(Match match, MatchScore matchScore) {
+	public static void sendMatchData(String json) {
 		try {
 			String url = serverUrl + matchUploadPath;
-			String matchJson = objectMapper.writeValueAsString(match);
-			String scoresJson = objectMapper.writeValueAsString(matchScore);
-			String json = "{\"match\": " + matchJson + ",";
-			json += "\"matchScore\": " + scoresJson + "}";
 
 			Log.d(TAG, "Sending match data json: " + json);
 
@@ -56,7 +50,7 @@ public class HttpService {
 				sendResultNotifications(notification, Constants.NOTIFICATION_TYPE.LOUD);
 				}
 			};
-			int timeout = 50000;
+			int timeout = 2 * 60 * 1000;
 			new SendPostAsyncTask(url, json, timeout, handler, postExecute).execute();
 		}
 		catch (Exception e) {

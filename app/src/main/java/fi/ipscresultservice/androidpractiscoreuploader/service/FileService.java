@@ -3,8 +3,15 @@ import android.net.Uri;
 import android.util.Log;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import fi.ipscresultservice.androidpractiscoreuploader.Constants;
 import fi.ipscresultservice.androidpractiscoreuploader.UploaderAppContext;
@@ -30,25 +37,20 @@ public class FileService {
 				if (!forceSend && lastModified != null && lastModified.equals(fileModifiedTime)) return;
 				lastModified = fileModifiedTime;
 				NotificationService.sendServiceNotifications("Sending data...", Constants.NOTIFICATION_TYPE.DISCREET);
-				Match match = PractiScoreFileParser
-						.readMatchDefDataFromExportFile(practiScoreExportFile);
-				MatchScore matchScore = PractiScoreFileParser
-					.readMatchResultDataFromExportFile((practiScoreExportFile));
-				HttpService.sendMatchData(match, matchScore);
+
+				String matchDefJson = readPractiScoreExportFileData(practiScoreExportFile, PractiScoreFileType.MATCH_DEF);
+				String scoresJson = readPractiScoreExportFileData(practiScoreExportFile, PractiScoreFileType.MATCH_SCORES);
+				String json = "{\"match\": " + matchDefJson;
+				if (scoresJson != null && scoresJson.length() > 0) {
+					json += ", \"matchScore\": " + scoresJson;
+				}
+				json += "}";
+
+				HttpService.sendMatchData(json);
 			} catch (Exception e) {
 				Log.e(TAG, "Error sending result data", e);
 				NotificationService.sendServiceNotifications("Error while sending data");
 			}
-	}
-
-	public static void setPractiScoreExportFilePath(Uri uri) {
-		practiScoreExportFilePath = FileUtil.getPath(UploaderAppContext.getAppContext(), uri);
-		readMatchNameFromFile();
-	}
-
-	public static void setPractiScoreExportFilePath(String path) {
-		practiScoreExportFilePath = path;
-		readMatchNameFromFile();
 	}
 
 	private static void readMatchNameFromFile() {
@@ -57,7 +59,7 @@ public class FileService {
 
 			File file = new File(practiScoreExportFilePath);
 			ObjectMapper objectMapper = new ObjectMapper();
-			String jsonString = PractiScoreFileParser.readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_DEF);
+			String jsonString = readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_DEF);
 			if (jsonString != null) {
 				Match match = objectMapper.readValue(jsonString, new TypeReference<Match>() {
 				});
@@ -70,6 +72,44 @@ public class FileService {
 					Constants.NOTIFICATION_TYPE.LOUD);
 		}
 	}
+
+	public static String readPractiScoreExportFileData(File file, PractiScoreFileType fileType) {
+		String fileContentString;
+
+		try {
+			ZipFile zipFile = new ZipFile(file);
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				if (entry.getName().equals(fileType.fileName)) {
+					InputStream inputStream = zipFile.getInputStream(entry);
+					fileContentString = IOUtils.toString(inputStream, "utf-8");
+					inputStream.close();
+					return fileContentString;
+				}
+			}
+			zipFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	public static void setPractiScoreExportFilePath(Uri uri) {
+		practiScoreExportFilePath = FileUtil.getPath(UploaderAppContext.getAppContext(), uri);
+		readMatchNameFromFile();
+	}
+
+	public static void setPractiScoreExportFilePath(String path) {
+		practiScoreExportFilePath = path;
+		readMatchNameFromFile();
+	}
+
 	public static String getPractiScoreExportFilePath() { return practiScoreExportFilePath; }
 
 	public static String getPractiScoreExportFileMatchname() {

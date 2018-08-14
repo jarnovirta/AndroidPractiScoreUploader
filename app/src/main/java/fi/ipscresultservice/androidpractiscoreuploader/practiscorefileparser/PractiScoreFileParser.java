@@ -19,7 +19,7 @@ import fi.ipscresultservice.androidpractiscoreuploader.domain.MatchScore;
 import fi.ipscresultservice.androidpractiscoreuploader.domain.StageScore;
 
 public class PractiScoreFileParser {
-
+/*
 	private static final String TAG = PractiScoreFileParser.class.getSimpleName();
 	public static Match readMatchDefDataFromExportFile(File file) {
 		try {
@@ -45,29 +45,5 @@ public class PractiScoreFileParser {
 			return null;
 		}
 	}
-	public static String readPractiScoreExportFileData(File file, PractiScoreFileType fileType) {
-		String fileContentString;
-
-		try {
-			ZipFile zipFile = new ZipFile(file);
-			Enumeration<? extends ZipEntry> entries = zipFile.entries();
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = entries.nextElement();
-				if (entry.getName().equals(fileType.fileName)) {
-					InputStream inputStream = zipFile.getInputStream(entry);
-					fileContentString = IOUtils.toString(inputStream, "utf-8");
-					inputStream.close();
-					return fileContentString;
-				}
-			}
-			zipFile.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+*/
 }
