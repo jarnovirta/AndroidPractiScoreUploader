@@ -3,8 +3,6 @@
 An Android application for uploading [PractiScore]( https://practiscore.com/) result data for IPSC shooting matches to a server ([IPSCResultServer](https://github.com/jarnovirta/IPSCResultServer), [hitfactor.fi](hitfactor.fi)).
 The application reads match result data from a PractiScore match export file (*.psc) and sends it to the server for publication.
 
-The project is an Android Studio / Gradle project.
-
 ## Setting up a connection to a server
 
 To set up a connection to the ([IPSCResultServer](https://github.com/jarnovirta/IPSCResultServer)). In the application’s main vies, select “Edit connection”. 
